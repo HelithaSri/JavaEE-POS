@@ -115,6 +115,7 @@ public class CustomerServlt extends HttpServlet {
                     writer.print(objBuilder.build());
             }
 
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
