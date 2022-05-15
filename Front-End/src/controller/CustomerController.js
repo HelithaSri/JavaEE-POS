@@ -77,6 +77,8 @@ function addCustomer() {
                     alert(res.message);
                     generateId();
                     loadAllCustomers();
+                    clearFields()   //Clear Input Fields
+                    loadAllCustomerIds();   //Load Customer ID's to Combo Box
                 } else {
                     alert(res.data);
                 }
@@ -98,9 +100,7 @@ function addCustomer() {
         var customerObj = new CustomerDTO(custId, custName, custAddress, custSalary, btns);
         customerDB.push(customerObj); */
         // loadAllCustomers(); //load all customers
-        clearFields()   //Clear Input Fields
 
-        loadAllCustomerIds();   //Load Customer ID's to Combo Box
     });
 }
 
@@ -202,14 +202,27 @@ function clearSearch() {
 //Delete Customer Function - Start
 function deleteCustomer() {
     $(".cus-delete").click(function () {
-        for (let i = 0; i < customerDB.length; i++) {
+        /*for (let i = 0; i < customerDB.length; i++) {
             // console.log(customerDB[i].getCustomerID());
             if (customerDB[i].getCustomerID() == clickedRowCId) {
                 customerDB.splice(i, 1);
             }
         }
         loadAllCustomers();
-        clearFields()   //Clear Input Fields
+        clearFields()   //Clear Input Fields*/
+        console.log(clickedRowCId);
+        $.ajax({
+            url: `http://localhost:8080/pos/customer?customerID=${clickedRowCId}`,
+            method: "DELETE",
+            success: function (resp) {
+                if (resp.status == 200) {
+                    loadAllCustomers();
+                    clearFields()   //Clear Input Fields
+                } else if (resp.status == 400) {
+                    alert(resp.data);
+                }
+            }
+        });
 
     });
 }
