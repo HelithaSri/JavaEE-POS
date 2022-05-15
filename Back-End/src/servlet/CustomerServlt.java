@@ -83,9 +83,32 @@ public class CustomerServlt extends HttpServlet {
             resp.setContentType("application/json");
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+            JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
+            PrintWriter writer = resp.getWriter();
 
             switch (option) {
-                case "SEARCH":
+                case "GENERATED_ID":
+
+                    ResultSet rstI = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1").executeQuery();
+                    if (rstI.next()){
+                        int tempId = Integer.parseInt(rstI.getString(1).split("-")[1]);
+                        tempId+=1;
+                        if (tempId<10){
+                            objectBuilder.add("id","C00-00"+tempId);
+                        }else if(tempId<100){
+                            objectBuilder.add("id","C00-0"+tempId);
+                        }else if(tempId<1000){
+                            objectBuilder.add("id","C00-"+tempId);
+                        }
+                    }else {
+                        objectBuilder.add("id","C00-000");
+                    }
+
+                    dataMsgBuilder.add("data",objectBuilder.build());
+                    dataMsgBuilder.add("massage","Done");
+                    dataMsgBuilder.add("status","200");
+                    writer.print(dataMsgBuilder.build());
+                    break;
 
                 case "GETALL":
                     ResultSet rst = connection.prepareStatement("SELECT * FROM customer").executeQuery();
@@ -106,13 +129,14 @@ public class CustomerServlt extends HttpServlet {
 
                         System.out.println(cusID + " " + cusAddress + " " + cusName + " " + cusSalary);
                     }
-                    JsonObjectBuilder objBuilder = Json.createObjectBuilder();
-                    objBuilder.add("data",arrayBuilder.build());
-                    objBuilder.add("massage","Done");
-                    objBuilder.add("status","200");
+//                    JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
+                    dataMsgBuilder.add("data",arrayBuilder.build());
+                    dataMsgBuilder.add("massage","Done");
+                    dataMsgBuilder.add("status","200");
 
-                    PrintWriter writer = resp.getWriter();
-                    writer.print(objBuilder.build());
+//                    PrintWriter writer = resp.getWriter();
+                    writer.print(dataMsgBuilder.build());
+                    break;
             }
 
         } catch (SQLException e) {

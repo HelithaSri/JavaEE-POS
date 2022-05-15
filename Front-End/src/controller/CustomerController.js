@@ -1,15 +1,15 @@
 $("#btnAddCus").prop('disabled', true);
 var clickedRowCId;
 /* Validation - Start */
-$('#error1').css({ "display": "none" });
-$('#error2').css({ "display": "none" });
-$('#error3').css({ "display": "none" });
-$('#error4').css({ "display": "none" });
+$('#error1').css({"display": "none"});
+$('#error2').css({"display": "none"});
+$('#error3').css({"display": "none"});
+$('#error4').css({"display": "none"});
 
-$('#error01').css({ "display": "none" });
-$('#error02').css({ "display": "none" });
-$('#error03').css({ "display": "none" });
-$('#error04').css({ "display": "none" });
+$('#error01').css({"display": "none"});
+$('#error02').css({"display": "none"});
+$('#error03').css({"display": "none"});
+$('#error04').css({"display": "none"});
 
 // var regExCusID = /^(C00-)[0-9]{3,4}$/;
 var RegExCusName = /^[A-z ]{5,20}$/;
@@ -47,15 +47,15 @@ function validation(regEx, id, error, nextId, btn) {
     $(id).keyup(function (event) {
         let input = $(id).val();
         if (regEx.test(input)) {
-            $(id).css({ 'border': '2px solid green', 'background-color': '#fff' });
-            $(error).css({ "display": "none" });
+            $(id).css({'border': '2px solid green', 'background-color': '#fff'});
+            $(error).css({"display": "none"});
             if (event.key == "Enter") {
                 $(btn).prop('disabled', false);
                 $(nextId).focus();
             }
         } else {
-            $(id).css({ 'border': '2px solid red', 'background-color': '#ffe6e6' });
-            $(error).css({ "color": "red", "display": "block" });
+            $(id).css({'border': '2px solid red', 'background-color': '#ffe6e6'});
+            $(error).css({"color": "red", "display": "block"});
             $(btn).prop('disabled', true);
         }
     });
@@ -103,18 +103,16 @@ function addCustomer() {
         loadAllCustomerIds();   //Load Customer ID's to Combo Box
     });
 }
+
 // Customer Add Function - End
 
 
 // Load All Customers Function - Start
 function loadAllCustomers() {
-    let btns =
-        "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+    let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
 
     $.ajax({
-        url:"http://localhost:8080/pos/customer?option=GETALL",
-        method:"GET",
-        success:function (resp){
+        url: "http://localhost:8080/pos/customer?option=GETALL", method: "GET", success: function (resp) {
             for (const customer of resp.data) {
                 let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td>${btns}</td></tr>`;
                 $("#cusTblBody").append(row);
@@ -145,6 +143,7 @@ function loadAllCustomers() {
         deleteCustomer();
     }*/
 }
+
 // Load All Customers Function - End
 
 
@@ -163,6 +162,7 @@ function bindCustomerRow() {
         $("#cusSalaryUpdate").val(custSalary);
     });
 }
+
 // Bind Events Customer Row - End
 
 $("#button-cus-search").click(function () {
@@ -171,18 +171,7 @@ $("#button-cus-search").click(function () {
     var response = searchCustomer(searchId);
     if (response) {
         $("#cusTblBody").empty();
-        let nRow =
-            "<tr><td>" +
-            response.getCustomerID() +
-            "</td><td>" +
-            response.getCustomerName() +
-            "</td><td>" +
-            response.getCustomerAddress() +
-            "</td><td>" +
-            response.getCustomerSalary() +
-            "</td><td class='text-center'>" +
-            response.getCustomerbtn() +
-            "</td></tr>";
+        let nRow = "<tr><td>" + response.getCustomerID() + "</td><td>" + response.getCustomerName() + "</td><td>" + response.getCustomerAddress() + "</td><td>" + response.getCustomerSalary() + "</td><td class='text-center'>" + response.getCustomerbtn() + "</td></tr>";
         $("#cusTblBody").append(nRow);
         bindCustomerRow();
         deleteCustomer();
@@ -207,6 +196,7 @@ function clearSearch() {
         clearFields()   //Clear Input Fields
     });
 }
+
 //clear search function - End
 
 //Delete Customer Function - Start
@@ -223,6 +213,7 @@ function deleteCustomer() {
 
     });
 }
+
 //Delete Customer Function - End
 
 $("#btnUpdateCus").click(function () {
@@ -243,7 +234,12 @@ $("#btnUpdateCus").click(function () {
 });
 
 function generateId() {
-    let index = customerDB.length - 1;
+    $.ajax({
+        url: "http://localhost:8080/pos/customer?option=GENERATED_ID", method: "GET", success: function (resp) {
+            $("#cusIdAdd").val(resp.data.id);
+        }
+    });
+    /*let index = customerDB.length - 1;
     let id;
     let temp;
     if (index != -1) {
@@ -260,7 +256,7 @@ function generateId() {
         $("#cusIdAdd").val("C00-0" + temp);
     } else {
         $("#cusIdAdd").val("C00-" + temp);
-    }
+    }*/
 }
 
 function disableEdit() {
