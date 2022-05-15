@@ -74,11 +74,12 @@ function addCustomer() {
             data: $("#addCusForm").serialize(),
             success: function (res) {
                 if (res.status == 200) {
-                    alert(res.message);
+                    // alert(res.message);
                     generateId();
                     loadAllCustomers();
                     clearFields()   //Clear Input Fields
                     loadAllCustomerIds();   //Load Customer ID's to Combo Box
+                    $("#addCustomer").modal('hide');
                 } else {
                     alert(res.data);
                 }
@@ -230,7 +231,33 @@ function deleteCustomer() {
 //Delete Customer Function - End
 
 $("#btnUpdateCus").click(function () {
-    let custId = $("#cusIdUpdate").val();
+
+    var cusOb = {
+        id: $("#cusIdUpdate").val(),
+        name: $("#cusNameUpdate").val(),
+        address: $("#cusAddressUpdate").val(),
+        salary: $("#cusSalaryUpdate").val()
+    }
+
+    console.log(typeof cusOb)
+    console.log(cusOb)
+    $.ajax({
+        url:"http://localhost:8080/pos/customer",
+        method:"PUT",
+        // contentType: "application/json",
+        data: JSON.stringify(cusOb),
+        success:function (resp) {
+            if (resp.status == 200) {
+                loadAllCustomers();
+                clearFields()   //Clear Input Fields
+                $("#updateCustomer").modal('hide');
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    })
+
+    /*let custId = $("#cusIdUpdate").val();
     let custName = $("#cusNameUpdate").val();
     let custAddress = $("#cusAddressUpdate").val();
     let custSalary = $("#cusSalaryUpdate").val();
@@ -241,9 +268,8 @@ $("#btnUpdateCus").click(function () {
             customerDB[i].setCustomerAddress(custAddress);
             customerDB[i].setCustomerSalary(custSalary);
         }
-    }
-    loadAllCustomers();
-    clearFields()   //Clear Input Fields
+    }*/
+
 });
 
 function generateId() {

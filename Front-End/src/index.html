@@ -273,11 +273,11 @@
     
         <section id="item" class="container">
             <!-- Add Item Model Start -->
-            <div class="modal fade" id="addItem" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal fade" id="addItem" aria-hidden="true" aria-labelledby="itemAddModalToggleLabel" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="exampleModalToggleLabel">
+                            <h5 class="modal-title" id="itemAddModalToggleLabel">
                                 <i class="bi bi-bag-plus m-2"></i>Add Item
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -316,12 +316,12 @@
             <!-- Add Item Model End -->
     
             <!-- Update Item Model Start -->
-            <div class="modal fade" id="updateItem" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+            <div class="modal fade" id="updateItem" aria-hidden="true" aria-labelledby="itemUpdateModalToggleLabel"
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="exampleModalToggleLabel">
+                            <h5 class="modal-title" id="itemUpdateModalToggleLabel">
                                 <i class="bi bi-bag-plus m-2"></i>Update Item
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -469,12 +469,12 @@
     
         <section id="cutomer" class="container">
             <!-- Add Customer Model Start -->
-            <div class="modal fade" id="addCustomer" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+            <div class="modal fade" id="addCustomer" aria-hidden="true" aria-labelledby="cusAddModalToggleLabel"
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="exampleModalToggleLabel">
+                            <h5 class="modal-title" id="cusAddModalToggleLabel">
                                 <i class="bi bi-person-plus-fill m-2"></i>Add Customer
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -518,39 +518,39 @@
             <!-- Add Customer Model End -->
     
             <!-- Update Customer Model Start -->
-            <div class="modal fade" id="updateCustomer" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+            <div class="modal fade" id="updateCustomer" aria-hidden="true" aria-labelledby="cusUpdateModalToggleLabel"
                 tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="exampleModalToggleLabel">
+                            <h5 class="modal-title" id="cusUpdateModalToggleLabel">
                                 <i class="bi bi-person-plus-fill m-2"></i>Update Customer
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form>
+                            <form id="updateCusForm">
                                 <div class="mb-3">
                                     <label for="cusIdUpdate" class="form-label">Customer ID</label>
-                                    <input type="text" class="form-control" id="cusIdUpdate" />
+                                    <input type="text" class="form-control" id="cusIdUpdate" name="cusIDUpdate"/>
                                     <small id="error01">* Customer ID is a required field, Pattern C00-001</small>
     
                                 </div>
                                 <div class="mb-3">
                                     <label for="cusNameUpdate" class="form-label">Customer Name</label>
-                                    <input type="text" class="form-control" id="cusNameUpdate" />
+                                    <input type="text" class="form-control" id="cusNameUpdate" name="cusNameUpdate"/>
                                     <small id="error02">* Customer Name is required field, Min 5 & Max 10</small>
     
                                 </div>
                                 <div class="mb-3">
                                     <label for="cusAddressUpdate" class="form-label">Customer Address</label>
-                                    <input type="text" class="form-control" id="cusAddressUpdate" />
+                                    <input type="text" class="form-control" id="cusAddressUpdate" name="cusAddressUpdate"/>
                                     <small id="error03">* Customer Address is required field, Min 5</small>
     
                                 </div>
                                 <div class="mb-3">
                                     <label for="cusSalaryUpdate" class="form-label">Customer Salary</label>
-                                    <input type="text" class="form-control" id="cusSalaryUpdate" />
+                                    <input type="text" class="form-control" id="cusSalaryUpdate" name="cusSalaryUpdate"/>
                                     <small id="error04">* Customer Address is required field, Ex:500.00</small>
     
                                 </div>
@@ -560,7 +560,7 @@
                             <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">
                                 Cancle
                             </button>
-                            <button id="btnUpdateCus" type="button" class="btn btn-primary mt-2">
+                            <button id="btnUpdateCus" type="button" class="btn btn-primary mt-2"  >
                                 Update Customer
                             </button>
                         </div>
