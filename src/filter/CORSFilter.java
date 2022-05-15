@@ -14,6 +14,10 @@ import java.io.IOException;
 
 @WebFilter(urlPatterns = "/*")
 public class CORSFilter implements Filter {
+    public CORSFilter() {
+        System.out.println("cros");
+    }
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -25,7 +29,6 @@ public class CORSFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String method = request.getMethod();
-        System.out.println(method);
 
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         resp.addHeader("Access-Control-Allow-Origin","*");
