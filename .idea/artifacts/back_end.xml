@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="back-end">
+    <output-path>$PROJECT_DIR$/out/artifacts/back_end</output-path>
+    <root id="archive" name="back-end.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Back-End" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="mysql-connector-java-8.0.25" />
+          <element id="library" level="project" name="json" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="Back-End/web/Web" />
+    </root>
+  </artifact>
+</component>

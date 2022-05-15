@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/JavaEE POS Backend.iml" filepath="$PROJECT_DIR$/JavaEE POS Backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Back-End/Back-End.iml" filepath="$PROJECT_DIR$/Back-End/Back-End.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Front-End/Front-End.iml" filepath="$PROJECT_DIR$/Front-End/Front-End.iml" />
     </modules>
   </component>
 </project>
