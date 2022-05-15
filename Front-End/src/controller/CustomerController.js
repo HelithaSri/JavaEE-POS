@@ -108,17 +108,24 @@ function addCustomer() {
 
 // Load All Customers Function - Start
 function loadAllCustomers() {
+    let btns =
+        "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
 
     $.ajax({
         url:"http://localhost:8080/pos/customer?option=GETALL",
         method:"GET",
         success:function (resp){
-            console.log("Added");
-            
+            for (const customer of resp.data) {
+                let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td>${btns}</td></tr>`;
+                $("#cusTblBody").append(row);
+                bindCustomerRow();
+                deleteCustomer();
+                console.log(customer)
+            }
         }
     });
 
-    $("#cusTblBody").empty(); //Duplicate Old rows remove
+    /*$("#cusTblBody").empty(); //Duplicate Old rows remove
     for (let i = 0; i < customerDB.length; i++) {
         let nRow =
             "<tr><td>" +
@@ -136,7 +143,7 @@ function loadAllCustomers() {
         $("#cusTblBody").append(nRow);
         bindCustomerRow();
         deleteCustomer();
-    }
+    }*/
 }
 // Load All Customers Function - End
 
