@@ -75,38 +75,37 @@ public class CustomerServlt extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        resp.setContentType("application/json");
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
+        PrintWriter writer = resp.getWriter();
+
         Connection connection = null;
         try {
             connection = ds.getConnection();
             String option = req.getParameter("option");
-
-            resp.setContentType("application/json");
-            JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
-            JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
-            PrintWriter writer = resp.getWriter();
-
             switch (option) {
                 case "GENERATED_ID":
 
                     ResultSet rstI = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1").executeQuery();
-                    if (rstI.next()){
+                    if (rstI.next()) {
                         int tempId = Integer.parseInt(rstI.getString(1).split("-")[1]);
-                        tempId+=1;
-                        if (tempId<10){
-                            objectBuilder.add("id","C00-00"+tempId);
-                        }else if(tempId<100){
-                            objectBuilder.add("id","C00-0"+tempId);
-                        }else if(tempId<1000){
-                            objectBuilder.add("id","C00-"+tempId);
+                        tempId += 1;
+                        if (tempId < 10) {
+                            objectBuilder.add("id", "C00-00" + tempId);
+                        } else if (tempId < 100) {
+                            objectBuilder.add("id", "C00-0" + tempId);
+                        } else if (tempId < 1000) {
+                            objectBuilder.add("id", "C00-" + tempId);
                         }
-                    }else {
-                        objectBuilder.add("id","C00-000");
+                    } else {
+                        objectBuilder.add("id", "C00-000");
                     }
 
-                    dataMsgBuilder.add("data",objectBuilder.build());
-                    dataMsgBuilder.add("massage","Done");
-                    dataMsgBuilder.add("status","200");
+                    dataMsgBuilder.add("data", objectBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
                     writer.print(dataMsgBuilder.build());
                     break;
 
@@ -130,9 +129,9 @@ public class CustomerServlt extends HttpServlet {
                         System.out.println(cusID + " " + cusAddress + " " + cusName + " " + cusSalary);
                     }
 //                    JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
-                    dataMsgBuilder.add("data",arrayBuilder.build());
-                    dataMsgBuilder.add("massage","Done");
-                    dataMsgBuilder.add("status","200");
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
 
 //                    PrintWriter writer = resp.getWriter();
                     writer.print(dataMsgBuilder.build());
@@ -140,7 +139,12 @@ public class CustomerServlt extends HttpServlet {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+            resp.setStatus(HttpServletResponse.SC_OK); //200
         } finally {
             try {
                 connection.close();

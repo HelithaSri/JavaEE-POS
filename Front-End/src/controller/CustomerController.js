@@ -236,7 +236,11 @@ $("#btnUpdateCus").click(function () {
 function generateId() {
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=GENERATED_ID", method: "GET", success: function (resp) {
-            $("#cusIdAdd").val(resp.data.id);
+            if (res.status == 200) {
+                $("#cusIdAdd").val(resp.data.id);
+            } else {
+                alert(res.data);
+            }
         }
     });
     /*let index = customerDB.length - 1;
