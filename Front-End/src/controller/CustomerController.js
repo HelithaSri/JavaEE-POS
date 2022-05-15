@@ -67,7 +67,7 @@ function validation(regEx, id, error, nextId, btn) {
 function addCustomer() {
 
     $("#btnAddCus").click(function () {
-        console.log($("#addCusForm").serialize());
+        // console.log($("#addCusForm").serialize());
         $.ajax({
             url: "http://localhost:8080/pos/customer",
             method: "POST",
@@ -110,7 +110,7 @@ function addCustomer() {
 // Load All Customers Function - Start
 function loadAllCustomers() {
     let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
-
+    $("#cusTblBody").empty(); //Duplicate Old rows remove
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=GETALL", method: "GET", success: function (resp) {
             for (const customer of resp.data) {
@@ -118,7 +118,7 @@ function loadAllCustomers() {
                 $("#cusTblBody").append(row);
                 bindCustomerRow();
                 deleteCustomer();
-                console.log(customer)
+                // console.log(customer)
             }
         }
     });
@@ -236,10 +236,10 @@ $("#btnUpdateCus").click(function () {
 function generateId() {
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=GENERATED_ID", method: "GET", success: function (resp) {
-            if (res.status == 200) {
+            if (resp.status == 200) {
                 $("#cusIdAdd").val(resp.data.id);
             } else {
-                alert(res.data);
+                alert(resp.data);
             }
         }
     });
