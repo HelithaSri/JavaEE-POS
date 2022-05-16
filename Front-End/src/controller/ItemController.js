@@ -6,8 +6,7 @@
  * @desc [ItemController]
  */
 var clickedRowIId;
- let ibtns =
-    "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
+let ibtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
 /* Functions Call Section - Start */
 
 generateItemId();   //Generate New Item Code
@@ -45,15 +44,14 @@ function addItem() {
         }
     });
 }
+
 // Item Add Function - End
 
 // Load All Items Function - Start
 function loadAllItems() {
     $("#itemTblBody").empty(); //Duplicate Old rows remove
     $.ajax({
-        url: "http://localhost:8080/pos/item?option=GETALL",
-        method: "GET",
-        success: function (resp) {
+        url: "http://localhost:8080/pos/item?option=GETALL", method: "GET", success: function (resp) {
             for (const item of resp.data) {
                 let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${ibtns}</td></tr>`;
                 $("#itemTblBody").append(row);
@@ -64,6 +62,7 @@ function loadAllItems() {
     });
     // clearFieldsItem();
 }
+
 // Load All Items Function - End
 
 // Bind Events Item Row Function - Start
@@ -80,6 +79,7 @@ function bindItemRow() {
         $("#updateItemPrice").val(itemPrice);
     });
 }
+
 // Bind Events Item Row - End
 
 $("#btn-item-search").click(function () {
@@ -90,18 +90,7 @@ $("#btn-item-search").click(function () {
     var response = searchItem(searchId);
     if (response) {
         $("#itemTblBody").empty();
-        let nRow =
-            "<tr><td>" +
-            response.getItemCode() +
-            "</td><td>" +
-            response.getItemName() +
-            "</td><td>" +
-            response.getItemQty() +
-            "</td><td>" +
-            response.getItemPrice() +
-            "</td><td class='text-center'>" +
-            response.getItemBtn() +
-            "</td></tr>";
+        let nRow = "<tr><td>" + response.getItemCode() + "</td><td>" + response.getItemName() + "</td><td>" + response.getItemQty() + "</td><td>" + response.getItemPrice() + "</td><td class='text-center'>" + response.getItemBtn() + "</td></tr>";
         $("#itemTblBody").append(nRow);
         bindItemRow();
         deleteItem();
@@ -129,25 +118,28 @@ function clearSearch() {
         $("#txt-item-search").val("");
     });
 }
+
 //clear search function - End
 
 function deleteItem() {
-    $(".item-delete").click(function () {
-        
-        for (let i = 0; i < itemDB.length; i++) {
-            console.log("awa");
-            // console.log(customerDB[i].getCustomerID());
-            if (itemDB[i].getItemCode() == clickedRowIId) {
-                itemDB.splice(i, 1);
-                console.log("if");
-            }else{
-                console.log("no");
+    $("#item-delete").click(function () {
+        console.log(clickedRowCId);
+        $.ajax({
+            url: `http://localhost:8080/pos/item?itemCode=${clickedRowIId}`,
+            method: "DELETE",
+            success: function (resp) {
+                if (resp.status == 200) {
+                    loadAllItems();
+                    clearFieldsItem()   //Clear Input Fields
+                } else if (resp.status == 400) {
+                    alert(resp.data);
+                }
             }
-        }
-        loadAllItems();
-        // console.log("daf57");
+        });
     });
 }
+
+
 
 $("#btnUpdateItem").click(function () {
     var itemObj = {
@@ -158,11 +150,10 @@ $("#btnUpdateItem").click(function () {
     }
 
     $.ajax({
-        url: "http://localhost:8080/pos/item", method: "PUT",
-        data: JSON.stringify(itemObj), success: function (resp) {
+        url: "http://localhost:8080/pos/item", method: "PUT", data: JSON.stringify(itemObj), success: function (resp) {
             if (resp.status == 200) {
                 loadAllItems();
-                clearFields()   //Clear Input Fields
+                clearFieldsItem() //Clear Input Fields
                 $("#updateItem").modal('hide');
             } else if (resp.status == 400) {
                 alert(resp.data);
