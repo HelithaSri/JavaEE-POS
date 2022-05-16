@@ -228,7 +228,7 @@ public class CustomerServlt extends HttpServlet {
         String cusIDUpdate = jsonObject.getString("id");
         String cusNameUpdate = jsonObject.getString("name");
         String cusAddressUpdate = jsonObject.getString("address");
-        int cusSalaryUpdate = jsonObject.getInt("salary");
+        String cusSalaryUpdate = jsonObject.getString("salary");
         PrintWriter writer = resp.getWriter();
         System.out.println(cusIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
