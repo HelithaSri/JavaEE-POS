@@ -167,8 +167,39 @@ function bindCustomerRow() {
 // Bind Events Customer Row - End
 
 $("#button-cus-search").click(function () {
+    if (!$("#txt-cus-search").val()) {
+        loadAllCustomers();
+        return;
+    }
 
-    var searchId = $("#txt-cus-search").val();
+    var cusOb = {
+        id: $("#txt-cus-search").val()
+    }
+
+    let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+    $.ajax({
+        url: "http://localhost:8080/pos/customer?option=SEARCH",
+        method: "GET",
+        data: {
+            id: $("#txt-cus-search").val()
+        },
+        success: function (resp) {
+            if (resp.status == 200) {
+                $("#cusTblBody").empty();
+                for (const customer of resp.data) {
+                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td>${btns}</td></tr>`;
+                    $("#cusTblBody").append(row);
+                    bindCustomerRow();
+                    deleteCustomer();
+                }
+            } else {
+                alert(resp.data);
+                clearSearch(); //Clear Search and Refresh table
+            }
+        }
+    });
+
+    /*var searchId = $("#txt-cus-search").val();
     var response = searchCustomer(searchId);
     if (response) {
         $("#cusTblBody").empty();
@@ -179,7 +210,7 @@ $("#button-cus-search").click(function () {
     } else {
         alert("No Such a customer");
         clearSearch(); //Clear Search and Refresh table
-    }
+    }*/
 });
 
 function searchCustomer(id) {
@@ -242,11 +273,8 @@ $("#btnUpdateCus").click(function () {
     console.log(typeof cusOb)
     console.log(cusOb)
     $.ajax({
-        url:"http://localhost:8080/pos/customer",
-        method:"PUT",
-        // contentType: "application/json",
-        data: JSON.stringify(cusOb),
-        success:function (resp) {
+        url: "http://localhost:8080/pos/customer", method: "PUT", // contentType: "application/json",
+        data: JSON.stringify(cusOb), success: function (resp) {
             if (resp.status == 200) {
                 loadAllCustomers();
                 clearFields()   //Clear Input Fields

@@ -134,6 +134,35 @@ public class CustomerServlt extends HttpServlet {
 //                    PrintWriter writer = resp.getWriter();
                     writer.print(dataMsgBuilder.build());
                     break;
+                case "SEARCH":
+                    String id = req.getParameter("id");
+                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+                    pstm.setObject(1,id);
+                    ResultSet resultSet = pstm.executeQuery();
+
+                    while (resultSet.next()) {
+                        String cusIDS = resultSet.getString(1);
+                        String cusNameS = resultSet.getString(2);
+                        String cusAddressS = resultSet.getString(3);
+                        int cusSalaryS = resultSet.getInt(4);
+
+                        resp.setStatus(HttpServletResponse.SC_OK);//201
+
+                        objectBuilder.add("id", cusIDS);
+                        objectBuilder.add("name", cusNameS);
+                        objectBuilder.add("address", cusAddressS);
+                        objectBuilder.add("salary", cusSalaryS);
+
+                        arrayBuilder.add(objectBuilder.build());
+
+                        System.out.println(cusIDS + " " + cusNameS + " " + cusAddressS + " " + cusSalaryS);
+                    }
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
+
+                    writer.print(dataMsgBuilder.build());
+                    break;
             }
 
         } catch (SQLException e) {
@@ -200,7 +229,7 @@ public class CustomerServlt extends HttpServlet {
         String cusIDUpdate = jsonObject.getString("id");
         String cusNameUpdate = jsonObject.getString("name");
         String cusAddressUpdate = jsonObject.getString("address");
-        String cusSalaryUpdate = jsonObject.getString("salary");
+        int cusSalaryUpdate = jsonObject.getInt("salary");
         PrintWriter writer = resp.getWriter();
         System.out.println(cusIDUpdate+" "+cusAddressUpdate+" "+cusSalaryUpdate+" "+cusNameUpdate);
 
