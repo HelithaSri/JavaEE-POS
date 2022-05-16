@@ -6,7 +6,7 @@
  * @desc [ItemController]
  */
 var clickedRowIId;
-let ibtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
+let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
 /* Functions Call Section - Start */
 
 generateItemId();   //Generate New Item Code
@@ -53,7 +53,7 @@ function loadAllItems() {
     $.ajax({
         url: "http://localhost:8080/pos/item?option=GETALL", method: "GET", success: function (resp) {
             for (const item of resp.data) {
-                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${ibtns}</td></tr>`;
+                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${iBtns}</td></tr>`;
                 $("#itemTblBody").append(row);
                 bindItemRow();
                 deleteItem();
@@ -169,25 +169,7 @@ function generateItemId() {
                 alert(resp.data);
             }
         }
-    });/*
-    let index = itemDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = itemDB[itemDB.length - 1].getItemCode();
-        temp = id.split("-")[1];
-        temp++;
-    }
-
-    if (index == -1) {
-        $("#itemCode").val("I00-001");
-    } else if (temp <= 9) {
-        $("#itemCode").val("I00-00" + temp);
-    } else if (temp <= 99) {
-        $("#itemCode").val("I00-0" + temp);
-    } else {
-        $("#itemCode").val("I00-" + temp);
-    }*/
+    });
 }
 
 function disableEditFields() {
