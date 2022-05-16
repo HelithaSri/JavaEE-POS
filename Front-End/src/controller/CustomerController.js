@@ -1,4 +1,6 @@
 $("#btnAddCus").prop('disabled', true);
+
+let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
 let clickedRowCId;
 
 //Customer Btn Click On Home Page
@@ -32,7 +34,7 @@ $("#button-cus-search").click(function () {
         return;
     }
 
-    let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+    // let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=SEARCH", method: "GET", data: {
             id: $("#txt-cus-search").val()
@@ -52,6 +54,29 @@ $("#button-cus-search").click(function () {
             }
         }
     });
+});
+
+//Update Customer Btn Click
+$("#btnUpdateCus").click(function () {
+    var cusOb = {
+        id: $("#cusIdUpdate").val(),
+        name: $("#cusNameUpdate").val(),
+        address: $("#cusAddressUpdate").val(),
+        salary: $("#cusSalaryUpdate").val()
+    }
+
+    $.ajax({
+        url: "http://localhost:8080/pos/customer", method: "PUT", // contentType: "application/json",
+        data: JSON.stringify(cusOb), success: function (resp) {
+            if (resp.status == 200) {
+                loadAllCustomers();
+                clearFields()   //Clear Input Fields
+                $("#updateCustomer").modal('hide');
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    })
 });
 
 //Generate Customer ID
@@ -94,32 +119,8 @@ function addCustomer() {
     });
 }
 
-//Update Customer Btn Click
-$("#btnUpdateCus").click(function () {
-    var cusOb = {
-        id: $("#cusIdUpdate").val(),
-        name: $("#cusNameUpdate").val(),
-        address: $("#cusAddressUpdate").val(),
-        salary: $("#cusSalaryUpdate").val()
-    }
-
-    $.ajax({
-        url: "http://localhost:8080/pos/customer", method: "PUT", // contentType: "application/json",
-        data: JSON.stringify(cusOb), success: function (resp) {
-            if (resp.status == 200) {
-                loadAllCustomers();
-                clearFields()   //Clear Input Fields
-                $("#updateCustomer").modal('hide');
-            } else if (resp.status == 400) {
-                alert(resp.data);
-            }
-        }
-    })
-});
-
 // Load All Customers Function - Start
 function loadAllCustomers() {
-    let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
     $("#cusTblBody").empty(); //Duplicate Old rows remove
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=GETALL", method: "GET", success: function (resp) {
