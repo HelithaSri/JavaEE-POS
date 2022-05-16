@@ -136,8 +136,8 @@ public class CustomerServlt extends HttpServlet {
                     break;
                 case "SEARCH":
                     String id = req.getParameter("id");
-                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-                    pstm.setObject(1, id);
+                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id LIKE ?");
+                    pstm.setObject(1, "%"+id+"%");
                     ResultSet resultSet = pstm.executeQuery();
 
                     while (resultSet.next()) {
