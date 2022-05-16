@@ -139,8 +139,6 @@ function deleteItem() {
     });
 }
 
-
-
 $("#btnUpdateItem").click(function () {
     var itemObj = {
         code: $("#updateItemCode").val(),
