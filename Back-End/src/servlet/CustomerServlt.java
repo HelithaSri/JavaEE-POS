@@ -137,7 +137,7 @@ public class CustomerServlt extends HttpServlet {
                 case "SEARCH":
                     String id = req.getParameter("id");
                     PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-                    pstm.setObject(1,id);
+                    pstm.setObject(1, id);
                     ResultSet resultSet = pstm.executeQuery();
 
                     while (resultSet.next()) {
@@ -185,7 +185,7 @@ public class CustomerServlt extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         String customerID = req.getParameter("customerID");
-        System.out.println("cus : "+" "+customerID);
+        System.out.println("cus : " + " " + customerID);
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
@@ -193,9 +193,9 @@ public class CustomerServlt extends HttpServlet {
         try {
             connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
-            pstm.setObject(1,customerID);
+            pstm.setObject(1, customerID);
 
-            if (pstm.executeUpdate()>0){
+            if (pstm.executeUpdate() > 0) {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
                 dataMsgBuilder.add("massage", "Customer Deleted");
@@ -208,8 +208,7 @@ public class CustomerServlt extends HttpServlet {
             dataMsgBuilder.add("data", e.getLocalizedMessage());
             writer.print(dataMsgBuilder.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        }
-        finally {
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
@@ -231,7 +230,7 @@ public class CustomerServlt extends HttpServlet {
         String cusAddressUpdate = jsonObject.getString("address");
         int cusSalaryUpdate = jsonObject.getInt("salary");
         PrintWriter writer = resp.getWriter();
-        System.out.println(cusIDUpdate+" "+cusAddressUpdate+" "+cusSalaryUpdate+" "+cusNameUpdate);
+        System.out.println(cusIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
         Connection connection = null;
         try {
