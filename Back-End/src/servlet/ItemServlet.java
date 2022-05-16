@@ -132,6 +132,33 @@ public class ItemServlet extends HttpServlet {
 
                     writer.print(dataMsgBuilder.build());
                     break;
+                case "SEARCH":
+                    String id = req.getParameter("code");
+                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM item WHERE code LIKE ?");
+                    pstm.setObject(1, "%"+id+"%");
+                    ResultSet resultSet = pstm.executeQuery();
+
+                    while (resultSet.next()) {
+                        String itemCodeS = resultSet.getString(1);
+                        String itemNameS = resultSet.getString(2);
+                        int itemQtyOnHandS = resultSet.getInt(3);
+                        int itemUnitPriceS = resultSet.getInt(4);
+
+                        resp.setStatus(HttpServletResponse.SC_OK);//201
+
+                        objectBuilder.add("code", itemCodeS);
+                        objectBuilder.add("name", itemNameS);
+                        objectBuilder.add("qtyOnHand", itemQtyOnHandS);
+                        objectBuilder.add("unitPrice", itemUnitPriceS);
+
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", "200");
+
+                    writer.print(dataMsgBuilder.build());
+                    break;
             }
         } catch (SQLException e) {
             e.printStackTrace();

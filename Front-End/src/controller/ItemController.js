@@ -86,7 +86,7 @@ $("#btn-item-search").click(function () {
     /* let btns =
         "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
  */
-    var searchId = $("#txt-item-search").val();
+    /*var searchId = $("#txt-item-search").val();
     var response = searchItem(searchId);
     if (response) {
         $("#itemTblBody").empty();
@@ -99,16 +99,43 @@ $("#btn-item-search").click(function () {
         clearSearch(); //Clear Search and Refresh table
         loadAllItems();
 
+    }*/
+
+    if (!$("#txt-item-search").val()) {
+        loadAllCustomers();
+        return;
     }
+
+    // let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+    $.ajax({
+        url: "http://localhost:8080/pos/item?option=SEARCH", method: "GET",
+        data: {
+            code: $("#txt-item-search").val()
+        }, success: function (resp) {
+            if (resp.status == 200) {
+                $("#itemTblBody").empty();
+                for (const item of resp.data) {
+                    let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${iBtns}</td></tr>`;
+                    $("#itemTblBody").append(row);
+                    bindItemRow();
+                    deleteItem();
+                }
+            } else {
+                alert(resp.data);
+                loadAllItems(); //load all customers
+                clearFieldsItem()   //Clear Input Fields
+            }
+        }
+    });
 });
 
-function searchItem(id) {
+/*function searchItem(id) {
     for (let i = 0; i < itemDB.length; i++) {
         if (itemDB[i].getItemCode() == id) {
             return itemDB[i];
         }
     }
-}
+}*/
 
 //clear search function - start
 function clearSearch() {
