@@ -1,9 +1,7 @@
 package servlet;
 
 import javax.annotation.Resource;
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObjectBuilder;
+import javax.json.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -125,5 +123,54 @@ public class ItemServlet extends HttpServlet {
             }
         }
 
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+
+        //we have to get updated data from JSON format
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
+
+        String code = jsonObject.getString("code");
+        String name = jsonObject.getString("name");
+        int qtyOnHand = jsonObject.getInt("qtyOnHand");
+        int unitPrice = jsonObject.getInt("unitPrice");
+        PrintWriter writer = resp.getWriter();
+        System.out.println(code + " " + name + " " + qtyOnHand + " " + unitPrice);
+
+        Connection connection = null;
+        try {
+            connection = ds.getConnection();
+            PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, qtyOnHand=?, unitPrice=? WHERE code=?");
+            pstm.setObject(1, name);
+            pstm.setObject(2, qtyOnHand);
+            pstm.setObject(3, unitPrice);
+            pstm.setObject(4, code);
+
+            if (pstm.executeUpdate() > 0) {
+                JsonObjectBuilder response = Json.createObjectBuilder();
+                resp.setStatus(HttpServletResponse.SC_CREATED);//201
+                response.add("status", 200);
+                response.add("message", "Successfully Updated");
+                response.add("data", "");
+                writer.print(response.build());
+            }
+
+        } catch (SQLException e) {
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

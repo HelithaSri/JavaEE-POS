@@ -55,7 +55,7 @@ function loadAllItems() {
         method: "GET",
         success: function (resp) {
             for (const item of resp.data) {
-                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.qtyOnHand}</td><td>${item.unitPrice}</td><td>${ibtns}</td></tr>`;
+                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${ibtns}</td></tr>`;
                 $("#itemTblBody").append(row);
                 bindItemRow();
                 deleteItem();
@@ -150,19 +150,25 @@ function deleteItem() {
 }
 
 $("#btnUpdateItem").click(function () {
-    let itemId = $("#updateItemCode").val();
-    let itemName = $("#updateItemName").val();
-    let itemQty = $("#updateItemQty").val();
-    let itemPrice = $("#updateItemPrice").val();
-    
-    for (let i = 0; i < itemDB.length; i++) {
-        if (itemDB[i].getItemCode()==itemId) {
-            itemDB[i].setItemName(itemName);
-            itemDB[i].setItemQty(itemQty);
-            itemDB[i].setItemPrice(itemPrice);
-        }
+    var itemObj = {
+        code: $("#updateItemCode").val(),
+        name: $("#updateItemName").val(),
+        qtyOnHand: parseInt($("#updateItemQty").val()),
+        unitPrice: parseInt($("#updateItemPrice").val())
     }
-    loadAllItems();
+
+    $.ajax({
+        url: "http://localhost:8080/pos/item", method: "PUT",
+        data: JSON.stringify(itemObj), success: function (resp) {
+            if (resp.status == 200) {
+                loadAllItems();
+                clearFields()   //Clear Input Fields
+                $("#updateItem").modal('hide');
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    })
 });
 
 function generateItemId() {
