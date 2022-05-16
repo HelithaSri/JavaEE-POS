@@ -6,50 +6,64 @@
  * @desc [ItemController]
  */
 var clickedRowIId;
+ let ibtns =
+    "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
 /* Functions Call Section - Start */
 
 generateItemId();   //Generate New Item Code
-addItem();  //Add New Item
+// addItem();  //Add New Item
 loadAllItems(); //Load All items
 clearSearch();  //Clear Search and Refresh table
 disableEditFields();    //Prevent Editing Item Code
 
 /* Functions Call Section - End */
 
+$("#btnAddItem").click(function () {
+    addItem();
+});
+
 // Item Add Function - Start
 function addItem() {
-    $("#btnAddItem").click(function () {
-
-        let itemId = $("#itemCode").val();
-        let itemName = $("#itemName").val();
-        let itemQty = $("#itemQty").val();
-        let itemPrice = $("#itemPrice").val();
-        let btns =
-        "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button  class='btn btn-danger item-delete'><i class='bi bi-trash'></i></button>";
-
-        /* var itemObj = {
-            __id: itemId,
-            __name: itemName,
-            __qty: itemQty,
-            __price: itemPrice
-        } */
-
-        var itemObj = new ItemDTO(itemId,itemName,itemPrice,itemQty,btns)
-
-        itemDB.push(itemObj);
-        console.log(itemDB);
-        loadAllItems(); //load all Items
-        // $("#itemCode,#itemName,#itemQty,#itemPrice").val(""); // Clear input Fields
-        generateItemId();
-        //bindItemRow(); //bind the events to the table rows after the row was added
-        loadAllItemCodes(); //Load Item ID's to Combo Box
+    $.ajax({
+        url: "http://localhost:8080/pos/item",
+        method: "POST",
+        data: $("#addItemForm").serialize(),
+        success: function (res) {
+            if (res.status == 200) {
+                loadAllItems(); //load all Items
+                generateItemId();
+                loadAllItemCodes(); //Load Item ID's to Combo Box
+                $("#addItem").modal('hide');
+            } else {
+                alert(res.data);
+            }
+        },
+        error: function (ob, textStatus, error) {
+            console.log(ob);
+            console.log(textStatus);
+            console.log(error);
+        }
     });
 }
 // Item Add Function - End
 
 // Load All Items Function - Start
 function loadAllItems() {
+    // let btnss = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
     $("#itemTblBody").empty(); //Duplicate Old rows remove
+    $.ajax({
+        url: "http://localhost:8080/pos/item?option=GETALL",
+        method: "GET",
+        success: function (resp) {
+            for (const item of resp.data) {
+                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.qtyOnHand}</td><td>${item.unitPrice}</td><td>${ibtns}</td></tr>`;
+                $("#itemTblBody").append(row);
+                bindItemRow();
+                deleteItem();
+            }
+        }
+    });
+
     /* let btns =
         "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
  */
