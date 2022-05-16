@@ -82,8 +82,9 @@ public class ItemServlet extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
+        Connection connection =null;
         try {
-            Connection connection = ds.getConnection();
+            connection = ds.getConnection();
             String option = req.getParameter("option");
             switch (option){
                 case "GETALL":
@@ -116,6 +117,12 @@ public class ItemServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
     }

@@ -49,7 +49,6 @@ function addItem() {
 
 // Load All Items Function - Start
 function loadAllItems() {
-    // let btnss = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
     $("#itemTblBody").empty(); //Duplicate Old rows remove
     $.ajax({
         url: "http://localhost:8080/pos/item?option=GETALL",
@@ -63,29 +62,7 @@ function loadAllItems() {
             }
         }
     });
-
-    /* let btns =
-        "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
- */
-    for (let i = 0; i < itemDB.length; i++) {
-        let nRow =
-            "<tr><td>" +
-            itemDB[i].getItemCode() +
-            "</td><td>" +
-            itemDB[i].getItemName() +
-            "</td><td>" +
-            itemDB[i].getItemQty() +
-            "</td><td>" +
-            itemDB[i].getItemPrice() +
-            "</td><td class='text-center'>" +
-            itemDB[i].getItemBtn() +
-            "</td></tr>";
-        console.log("s");
-        $("#itemTblBody").append(nRow);
-        bindItemRow();
-        deleteItem();
-    }
-    clearFieldsItem();
+    // clearFieldsItem();
 }
 // Load All Items Function - End
 
