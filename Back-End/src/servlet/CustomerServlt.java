@@ -20,6 +20,7 @@ import java.sql.SQLException;
  * @created 5/15/2022 - 12:04 PM
  * @project JavaEE POS Backend
  */
+
 @WebServlet(urlPatterns = "/customer")
 public class CustomerServlt extends HttpServlet {
 
