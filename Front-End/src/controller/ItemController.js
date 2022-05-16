@@ -172,6 +172,15 @@ $("#btnUpdateItem").click(function () {
 });
 
 function generateItemId() {
+    $.ajax({
+        url: "http://localhost:8080/pos/item?option=GENERATED_ID", method: "GET", success: function (resp) {
+            if (resp.status == 200) {
+                $("#itemCode").val(resp.data.code);
+            } else {
+                alert(resp.data);
+            }
+        }
+    });/*
     let index = itemDB.length - 1;
     let id;
     let temp;
@@ -189,7 +198,7 @@ function generateItemId() {
         $("#itemCode").val("I00-0" + temp);
     } else {
         $("#itemCode").val("I00-" + temp);
-    }
+    }*/
 }
 
 function disableEditFields() {
