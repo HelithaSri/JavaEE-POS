@@ -104,7 +104,7 @@ public class CustomerServlt extends HttpServlet {
 
                     dataMsgBuilder.add("data", objectBuilder.build());
                     dataMsgBuilder.add("massage", "Done");
-                    dataMsgBuilder.add("status", "200");
+                    dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
 
@@ -130,7 +130,7 @@ public class CustomerServlt extends HttpServlet {
 //                    JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
                     dataMsgBuilder.add("data", arrayBuilder.build());
                     dataMsgBuilder.add("massage", "Done");
-                    dataMsgBuilder.add("status", "200");
+                    dataMsgBuilder.add("status", 200);
 
 //                    PrintWriter writer = resp.getWriter();
                     writer.print(dataMsgBuilder.build());
@@ -160,7 +160,7 @@ public class CustomerServlt extends HttpServlet {
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
                     dataMsgBuilder.add("massage", "Done");
-                    dataMsgBuilder.add("status", "200");
+                    dataMsgBuilder.add("status", 200);
 
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -200,7 +200,7 @@ public class CustomerServlt extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
                 dataMsgBuilder.add("massage", "Customer Deleted");
-                dataMsgBuilder.add("status", "200");
+                dataMsgBuilder.add("status", 200);
                 writer.print(dataMsgBuilder.build());
             }
         } catch (SQLException e) {

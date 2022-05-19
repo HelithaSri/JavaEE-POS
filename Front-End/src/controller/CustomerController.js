@@ -1,6 +1,7 @@
 $("#btnAddCus").prop('disabled', true);
 
-let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+// let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
+let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-pencil-square'></i></button>";
 let clickedRowCId;
 
 //Customer Btn Click On Home Page
@@ -8,6 +9,7 @@ $("#customer-clicks").click(function () {
     validationStaff() // Staff required for validation
     loadAllCustomers(); //load all customers
     clearFields()   //Clear Input Fields
+    clearSearch();
     disableEdit();  //Prevent Editing Customer ID
 })
 
@@ -42,10 +44,9 @@ $("#button-cus-search").click(function () {
             if (resp.status == 200) {
                 $("#cusTblBody").empty();
                 for (const customer of resp.data) {
-                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td>${btns}</td></tr>`;
+                    let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td style="text-align: center">${btns}</td></tr>`;
                     $("#cusTblBody").append(row);
                     bindCustomerRow();
-                    deleteCustomer();
                 }
             } else {
                 alert(resp.data);
@@ -79,6 +80,11 @@ $("#btnUpdateCus").click(function () {
     })
 });
 
+//Delete Customer Btn Click
+$(".cus-delete").click(function () {
+    deleteCustomer();
+});
+
 //Generate Customer ID
 function generateId() {
     $.ajax({
@@ -100,11 +106,8 @@ function addCustomer() {
         data: $("#addCusForm").serialize(),
         success: function (res) {
             if (res.status == 200) {
-                // alert(res.message);
-                generateId();
                 loadAllCustomers();
                 clearFields()   //Clear Input Fields
-                loadAllCustomerIds();   //Load Customer ID's to Combo Box
                 $("#addCustomer").modal('hide');
             } else {
                 alert(res.data);
@@ -125,10 +128,9 @@ function loadAllCustomers() {
     $.ajax({
         url: "http://localhost:8080/pos/customer?option=GETALL", method: "GET", success: function (resp) {
             for (const customer of resp.data) {
-                let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td>${btns}</td></tr>`;
+                let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td><td style="text-align: center">${btns}</td></tr>`;
                 $("#cusTblBody").append(row);
                 bindCustomerRow();
-                deleteCustomer();
             }
         }
     });
@@ -137,12 +139,12 @@ function loadAllCustomers() {
 // Bind Events Customer Row Function - Start
 function bindCustomerRow() {
     $("#cusTblBody>tr").click(function () {
-        clickedRowCId = $(this).children(":eq(0)").text();
+        let custID=$(this).children(":eq(0)").text();
         let custName = $(this).children(":eq(1)").text();
         let custAddress = $(this).children(":eq(2)").text();
         let custSalary = $(this).children(":eq(3)").text();
 
-        $("#cusIdUpdate").val(clickedRowCId);
+        $("#cusIdUpdate").val(custID);
         $("#cusNameUpdate").val(custName);
         $("#cusAddressUpdate").val(custAddress);
         $("#cusSalaryUpdate").val(custSalary);
@@ -151,21 +153,19 @@ function bindCustomerRow() {
 
 //Delete Customer Function - Start
 function deleteCustomer() {
-    $(".cus-delete").click(function () {
-        console.log(clickedRowCId);
-        var s = "C00-001";
-        $.ajax({
-            url: `http://localhost:8080/pos/customer?customerID=${clickedRowCId}`,
-            method: "DELETE",
-            success: function (resp) {
-                if (resp.status == 200) {
-                    loadAllCustomers();
-                    clearFields()   //Clear Input Fields
-                } else if (resp.status == 400) {
-                    alert(resp.data);
-                }
+    let id = $("#cusIdUpdate").val();
+    $.ajax({
+        url: `http://localhost:8080/pos/customer?customerID=${id}`,
+        method: "DELETE",
+        success: function (resp) {
+            if (resp.status == 200) {
+                loadAllCustomers();
+                clearFields()   //Clear Input Fields
+                $("#updateCustomer").modal('hide');
+            } else if (resp.status == 400) {
+                alert(resp.data);
             }
-        });
+        }
     });
 }
 

@@ -9,10 +9,11 @@
 // let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
 let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-pencil-square'></i></button>";
 
-//Item btn Click
+//Item btn Click On Home Page
 $("#item-clicks").click(function () {
     loadAllItems(); //Load All items
     clearSearch();  //Clear Search and Refresh table
+    clearFieldsItem();
     disableEditFields();    //Prevent Editing Item Code
 });
 
@@ -29,7 +30,7 @@ $("#btnAddItem").click(function () {
 //Search Item btn Click
 $("#btn-item-search").click(function () {
     if (!$("#txt-item-search").val()) {
-        loadAllCustomers();
+        loadAllItems();
         return;
     }
     $.ajax({
@@ -54,7 +55,7 @@ $("#btn-item-search").click(function () {
 });
 
 //Item Delete Btn Click
-$("#item-delete").click(function () {
+$(".item-delete").click(function () {
     deleteItem();
 });
 
@@ -78,6 +79,11 @@ $("#btnUpdateItem").click(function () {
             }
         }
     })
+});
+
+// Clear Search Btn Click
+$("#clear-btn-item").click(function () {
+    clearSearch();
 });
 
 // Item Add Function - Start
@@ -120,12 +126,12 @@ function loadAllItems() {
 // Bind Events Item Row Function - Start
 function bindItemRow() {
     $("#itemTblBody > tr").click(function () {
-        clickedRowIId = $(this).children(":eq(0)").text();
+        let itemId = $(this).children(":eq(0)").text();
         let itemName = $(this).children(":eq(1)").text();
         let itemPrice = $(this).children(":eq(2)").text();
         let itemQty = $(this).children(":eq(3)").text();
 
-        $("#updateItemCode").val(clickedRowIId);
+        $("#updateItemCode").val(itemId);
         $("#updateItemName").val(itemName);
         $("#updateItemQty").val(itemQty);
         $("#updateItemPrice").val(itemPrice);
@@ -134,11 +140,8 @@ function bindItemRow() {
 
 //clear search function - start
 function clearSearch() {
-    $("#clear-btn-item").click(function () {
-        console.log("sda");
-        loadAllItems(); //load all Items
-        $("#txt-item-search").val("");
-    });
+    loadAllItems(); //load all Items
+    $("#txt-item-search").val("");
 }
 
 // Delete Item function - start
