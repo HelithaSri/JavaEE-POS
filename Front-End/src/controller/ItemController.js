@@ -5,108 +5,33 @@
  * @modify date : 2022-03-07  23:24
  * @desc [ItemController]
  */
-var clickedRowIId;
-let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
-/* Functions Call Section - Start */
 
-generateItemId();   //Generate New Item Code
-// addItem();  //Add New Item
-loadAllItems(); //Load All items
-clearSearch();  //Clear Search and Refresh table
-disableEditFields();    //Prevent Editing Item Code
+// let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
+let iBtns = "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-pencil-square'></i></button>";
 
-/* Functions Call Section - End */
+//Item btn Click
+$("#item-clicks").click(function () {
+    loadAllItems(); //Load All items
+    clearSearch();  //Clear Search and Refresh table
+    disableEditFields();    //Prevent Editing Item Code
+});
 
+//Add Item Outside Btn Click
+$("#addItemOutBtn").click(function (){
+    generateItemId();
+});
+
+//Add Item btn Click
 $("#btnAddItem").click(function () {
     addItem();
 });
 
-// Item Add Function - Start
-function addItem() {
-    $.ajax({
-        url: "http://localhost:8080/pos/item",
-        method: "POST",
-        data: $("#addItemForm").serialize(),
-        success: function (res) {
-            if (res.status == 200) {
-                loadAllItems(); //load all Items
-                generateItemId();
-                loadAllItemCodes(); //Load Item ID's to Combo Box
-                $("#addItem").modal('hide');
-            } else {
-                alert(res.data);
-            }
-        },
-        error: function (ob, textStatus, error) {
-            console.log(ob);
-            console.log(textStatus);
-            console.log(error);
-        }
-    });
-}
-
-// Item Add Function - End
-
-// Load All Items Function - Start
-function loadAllItems() {
-    $("#itemTblBody").empty(); //Duplicate Old rows remove
-    $.ajax({
-        url: "http://localhost:8080/pos/item?option=GETALL", method: "GET", success: function (resp) {
-            for (const item of resp.data) {
-                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${iBtns}</td></tr>`;
-                $("#itemTblBody").append(row);
-                bindItemRow();
-                deleteItem();
-            }
-        }
-    });
-    // clearFieldsItem();
-}
-
-// Load All Items Function - End
-
-// Bind Events Item Row Function - Start
-function bindItemRow() {
-    $("#itemTblBody > tr").click(function () {
-        clickedRowIId = $(this).children(":eq(0)").text();
-        let itemName = $(this).children(":eq(1)").text();
-        let itemPrice = $(this).children(":eq(2)").text();
-        let itemQty = $(this).children(":eq(3)").text();
-
-        $("#updateItemCode").val(clickedRowIId);
-        $("#updateItemName").val(itemName);
-        $("#updateItemQty").val(itemQty);
-        $("#updateItemPrice").val(itemPrice);
-    });
-}
-
-// Bind Events Item Row - End
-
+//Search Item btn Click
 $("#btn-item-search").click(function () {
-    /* let btns =
-        "<button class='btn btn-warning' data-bs-target='#updateItem' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button id='item-delete' class='btn btn-danger'><i class='bi bi-trash'></i></button>";
- */
-    /*var searchId = $("#txt-item-search").val();
-    var response = searchItem(searchId);
-    if (response) {
-        $("#itemTblBody").empty();
-        let nRow = "<tr><td>" + response.getItemCode() + "</td><td>" + response.getItemName() + "</td><td>" + response.getItemQty() + "</td><td>" + response.getItemPrice() + "</td><td class='text-center'>" + response.getItemBtn() + "</td></tr>";
-        $("#itemTblBody").append(nRow);
-        bindItemRow();
-        deleteItem();
-    } else {
-        alert("No Such a Item");
-        clearSearch(); //Clear Search and Refresh table
-        loadAllItems();
-
-    }*/
-
     if (!$("#txt-item-search").val()) {
         loadAllCustomers();
         return;
     }
-
-    // let btns = "<button class='btn btn-warning' data-bs-target='#updateCustomer' data-bs-toggle='modal'><i class='bi bi-arrow-clockwise'></i></button> <button class='btn btn-danger cus-delete'><i class='bi bi-trash'></i></button>";
     $.ajax({
         url: "http://localhost:8080/pos/item?option=SEARCH", method: "GET",
         data: {
@@ -115,10 +40,9 @@ $("#btn-item-search").click(function () {
             if (resp.status == 200) {
                 $("#itemTblBody").empty();
                 for (const item of resp.data) {
-                    let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td>${iBtns}</td></tr>`;
+                    let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td style="text-align: center">${iBtns}</td></tr>`;
                     $("#itemTblBody").append(row);
                     bindItemRow();
-                    deleteItem();
                 }
             } else {
                 alert(resp.data);
@@ -129,43 +53,12 @@ $("#btn-item-search").click(function () {
     });
 });
 
-/*function searchItem(id) {
-    for (let i = 0; i < itemDB.length; i++) {
-        if (itemDB[i].getItemCode() == id) {
-            return itemDB[i];
-        }
-    }
-}*/
+//Item Delete Btn Click
+$("#item-delete").click(function () {
+    deleteItem();
+});
 
-//clear search function - start
-function clearSearch() {
-    $("#clear-btn-item").click(function () {
-        console.log("sda");
-        loadAllItems(); //load all Items
-        $("#txt-item-search").val("");
-    });
-}
-
-//clear search function - End
-
-function deleteItem() {
-    $("#item-delete").click(function () {
-        console.log(clickedRowCId);
-        $.ajax({
-            url: `http://localhost:8080/pos/item?itemCode=${clickedRowIId}`,
-            method: "DELETE",
-            success: function (resp) {
-                if (resp.status == 200) {
-                    loadAllItems();
-                    clearFieldsItem()   //Clear Input Fields
-                } else if (resp.status == 400) {
-                    alert(resp.data);
-                }
-            }
-        });
-    });
-}
-
+//Update Item Btn Click
 $("#btnUpdateItem").click(function () {
     var itemObj = {
         code: $("#updateItemCode").val(),
@@ -187,6 +80,86 @@ $("#btnUpdateItem").click(function () {
     })
 });
 
+// Item Add Function - Start
+function addItem() {
+    $.ajax({
+        url: "http://localhost:8080/pos/item",
+        method: "POST",
+        data: $("#addItemForm").serialize(),
+        success: function (res) {
+            if (res.status == 200) {
+                loadAllItems(); //load all Items
+                clearFieldsItem();
+                $("#addItem").modal('hide');
+            } else {
+                alert(res.data);
+            }
+        },
+        error: function (ob, textStatus, error) {
+            console.log(ob);
+            console.log(textStatus);
+            console.log(error);
+        }
+    });
+}
+
+// Load All Items Function - Start
+function loadAllItems() {
+    $("#itemTblBody").empty(); //Duplicate Old rows remove
+    $.ajax({
+        url: "http://localhost:8080/pos/item?option=GETALL", method: "GET", success: function (resp) {
+            for (const item of resp.data) {
+                let row = `<tr><td>${item.code}</td><td>${item.name}</td><td>${item.unitPrice}</td><td>${item.qtyOnHand}</td><td style="text-align: center">${iBtns}</td></tr>`;
+                $("#itemTblBody").append(row);
+                bindItemRow();
+            }
+        }
+    });
+}
+
+// Bind Events Item Row Function - Start
+function bindItemRow() {
+    $("#itemTblBody > tr").click(function () {
+        clickedRowIId = $(this).children(":eq(0)").text();
+        let itemName = $(this).children(":eq(1)").text();
+        let itemPrice = $(this).children(":eq(2)").text();
+        let itemQty = $(this).children(":eq(3)").text();
+
+        $("#updateItemCode").val(clickedRowIId);
+        $("#updateItemName").val(itemName);
+        $("#updateItemQty").val(itemQty);
+        $("#updateItemPrice").val(itemPrice);
+    });
+}
+
+//clear search function - start
+function clearSearch() {
+    $("#clear-btn-item").click(function () {
+        console.log("sda");
+        loadAllItems(); //load all Items
+        $("#txt-item-search").val("");
+    });
+}
+
+// Delete Item function - start
+function deleteItem() {
+    let id = $("#updateItemCode").val();
+    $.ajax({
+        url: `http://localhost:8080/pos/item?itemCode=${id}`,
+        method: "DELETE",
+        success: function (resp) {
+            if (resp.status == 200) {
+                loadAllItems();
+                clearFieldsItem()   //Clear Input Fields
+                $("#updateItem").modal('hide');
+            } else if (resp.status == 400) {
+                alert(resp.data);
+            }
+        }
+    });
+}
+
+// Generate Item ID's function - start
 function generateItemId() {
     $.ajax({
         url: "http://localhost:8080/pos/item?option=GENERATED_ID", method: "GET", success: function (resp) {
@@ -199,10 +172,12 @@ function generateItemId() {
     });
 }
 
+//Prevent Edit Item ID Input Fields
 function disableEditFields() {
     $("#itemCode,#updateItemCode").css("pointer-events", "none");
 }
 
+//Clear All Input Fields
 function clearFieldsItem() {
     $("#itemName,#itemQty,#itemPrice").val("");    // Clear input Fields (Add)
     $("#updateItemName,#updateItemQty,#updateItemPrice").val(""); // Clear input Fields (Update)
