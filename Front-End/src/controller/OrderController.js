@@ -7,6 +7,7 @@ generateOrderId();  //Generate Order Id
 disableEdit();  //Prevent Editing Input Fields
 setDate();  //Set Time
 loadAllCustomerIds();
+loadAllItemCodes();
 
 $("#btnAddToCart").click(function(){
     addItemToCart();
@@ -61,23 +62,16 @@ function loadAllCustomerIds() {
         url:"http://localhost:8080/pos/order?option=LOAD_CUS_ID",
         method:"GET",
         success:function (resp) {
-            console.log(resp.massage);
             if (resp.status==200){
                 for (const customer of resp.data){
                     let option = `<option value="${customer.id}">${customer.id}</option>`;
                     $("#idCmb").append(option);
                 }
-
             }else {
                 alert(resp.data);
             }
         }
     })
-
-    /*for (let i in customerDB) {
-        let option = `<option value="${customerDB[i].getCustomerID()}">${customerDB[i].getCustomerID()}</option>`;
-        $("#idCmb").append(option);
-    }*/
 
 }
 
@@ -88,10 +82,25 @@ function loadAllItemCodes() {
     let itemHint = `<option disabled selected>Select Item ID</option>`;
     $("#itemIdCmb").append(itemHint);
 
-    for (let i in itemDB) {
+    $.ajax({
+        url:"http://localhost:8080/pos/order?option=LOAD_ITEM_ID",
+        method:"GET",
+        success:function (resp) {
+            if (resp.status==200){
+                for (const item of resp.data){
+                    let option = `<option value="${item.code}">${item.code}</option>`;
+                    $("#itemIdCmb").append(option);
+                }
+            }else {
+                alert(resp.data);
+            }
+        }
+    })
+
+    /*for (let i in itemDB) {
         let option = `<option value="${itemDB[i].getItemCode()}">${itemDB[i].getItemCode()}</option>`;
         $("#itemIdCmb").append(option);
-    }
+    }*/
 }
 
 /* Load Customer Data To input Fields */

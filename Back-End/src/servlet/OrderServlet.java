@@ -96,6 +96,19 @@ public class OrderServlet extends HttpServlet {
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
+
+                case "LOAD_ITEM_ID":
+                    rst = connection.prepareStatement("SELECT code FROM item").executeQuery();
+                    while (rst.next()){
+                        String code = rst.getString(1);
+                        objectBuilder.add("code",code);
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    dataMsgBuilder.add("data",arrayBuilder.build());
+                    dataMsgBuilder.add("massage","Done");
+                    dataMsgBuilder.add("status",200);
+                    writer.print(dataMsgBuilder.build());
+                    break;
             }
         } catch (SQLException e) {
             e.printStackTrace();
