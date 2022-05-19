@@ -121,27 +121,34 @@ function selectedCustomer(CustomerId) {
             }
         }
     });
-
-    /*for (const i in customerDB) {
-        if (customerDB[i].getCustomerID()==CustomerId) {
-            let element = customerDB[i];
-            $("#inCusName").val(element.getCustomerName());
-            $("#inCusSalary").val(element.getCustomerSalary());
-            $("#inCusaddress").val(element.getCustomerAddress());
-        }
-    }*/
 }
 
 /* Load Item Data To input Fields */
 function selectedItem(ItemId) {
-    for (const i in itemDB) {
+
+    $.ajax({
+        url:`http://localhost:8080/pos/order?option=SELECTED_ITEM&itemID=${ItemId}`,
+        method: "GET",
+        success:function (resp) {
+            if (resp.status==200){
+                for (const item of resp.data){
+                    $("#itemNameO").val(item.description);
+                    $("#qtyOnHandO").val(item.qtyOnHand);
+                    $("#priceO").val(item.unitPrice);
+                }
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+    /*for (const i in itemDB) {
         if (itemDB[i].getItemCode()==ItemId) {
             let element = itemDB[i];
             $("#itemNameO").val(element.getItemName());
             $("#qtyOnHandO").val(element.getItemQty());
             $("#priceO").val(element.getItemPrice());
         }
-    }
+    }*/
 }
 
 /* Prevent Clicking input Fields */

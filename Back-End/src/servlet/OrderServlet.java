@@ -39,39 +39,40 @@ public class OrderServlet extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);//200
         Connection connection = null;
         try {
-           connection = ds.getConnection();
-            ResultSet rst =null;
+            connection = ds.getConnection();
+            ResultSet rst;
+            PreparedStatement pstm;
             String option = req.getParameter("option");
-            switch (option){
+            switch (option) {
                 case "LOAD_CUS_ID":
                     rst = connection.prepareStatement("SELECT id FROM customer").executeQuery();
-                    while (rst.next()){
+                    while (rst.next()) {
                         String id = rst.getString(1);
-                        objectBuilder.add("id",id);
+                        objectBuilder.add("id", id);
                         arrayBuilder.add(objectBuilder.build());
                     }
-                    dataMsgBuilder.add("data",arrayBuilder.build());
-                    dataMsgBuilder.add("massage","Done");
-                    dataMsgBuilder.add("status",200);
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
                 case "SELECTED_CUS":
                     String selectID = req.getParameter("cusID");
-                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
-                    pstm.setObject(1,selectID);
+                    pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+                    pstm.setObject(1, selectID);
                     rst = pstm.executeQuery();
-                    if (rst.next()){
+                    if (rst.next()) {
                         String cusName = rst.getString(2);
                         String cusAddress = rst.getString(3);
                         String cusSalary = rst.getString(4);
-                        objectBuilder.add("name",cusName);
-                        objectBuilder.add("address",cusAddress);
-                        objectBuilder.add("salary",cusSalary);
+                        objectBuilder.add("name", cusName);
+                        objectBuilder.add("address", cusAddress);
+                        objectBuilder.add("salary", cusSalary);
                         arrayBuilder.add(objectBuilder.build());
                     }
-                    dataMsgBuilder.add("data",arrayBuilder.build());
-                    dataMsgBuilder.add("massage","Done");
-                    dataMsgBuilder.add("status",200);
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
 
@@ -99,20 +100,41 @@ public class OrderServlet extends HttpServlet {
 
                 case "LOAD_ITEM_ID":
                     rst = connection.prepareStatement("SELECT code FROM item").executeQuery();
-                    while (rst.next()){
+                    while (rst.next()) {
                         String code = rst.getString(1);
-                        objectBuilder.add("code",code);
+                        objectBuilder.add("code", code);
                         arrayBuilder.add(objectBuilder.build());
                     }
-                    dataMsgBuilder.add("data",arrayBuilder.build());
-                    dataMsgBuilder.add("massage","Done");
-                    dataMsgBuilder.add("status",200);
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", 200);
+                    writer.print(dataMsgBuilder.build());
+                    break;
+
+                case "SELECTED_ITEM":
+                    String selectItemID = req.getParameter("itemID");
+                    pstm = connection.prepareStatement("SELECT * FROM item WHERE code=?");
+                    pstm.setObject(1, selectItemID);
+                    rst = pstm.executeQuery();
+                    if (rst.next()) {
+                        String description = rst.getString(2);
+                        String qtyOnHand = rst.getString(3);
+                        String unitPrice = rst.getString(4);
+
+                        objectBuilder.add("description", description);
+                        objectBuilder.add("qtyOnHand", qtyOnHand);
+                        objectBuilder.add("unitPrice", unitPrice);
+                        arrayBuilder.add(objectBuilder.build());
+                    }
+                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {
