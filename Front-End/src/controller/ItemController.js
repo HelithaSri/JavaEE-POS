@@ -96,6 +96,7 @@ function addItem() {
             if (res.status == 200) {
                 loadAllItems(); //load all Items
                 clearFieldsItem();
+                loadAllItemCodes();
                 $("#addItem").modal('hide');
             } else {
                 alert(res.data);
