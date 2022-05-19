@@ -86,7 +86,6 @@ public class CustomerServlt extends HttpServlet {
             String option = req.getParameter("option");
             switch (option) {
                 case "GENERATED_ID":
-
                     ResultSet rstI = connection.prepareStatement("SELECT id FROM customer ORDER BY id DESC LIMIT 1").executeQuery();
                     if (rstI.next()) {
                         int tempId = Integer.parseInt(rstI.getString(1).split("-")[1]);

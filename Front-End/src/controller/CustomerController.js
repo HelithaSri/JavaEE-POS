@@ -108,6 +108,7 @@ function addCustomer() {
             if (res.status == 200) {
                 loadAllCustomers();
                 clearFields()   //Clear Input Fields
+                loadAllCustomerIds();
                 $("#addCustomer").modal('hide');
             } else {
                 alert(res.data);
