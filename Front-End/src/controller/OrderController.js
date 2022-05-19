@@ -6,6 +6,7 @@ $("#cash").val(0);
 generateOrderId();  //Generate Order Id
 disableEdit();  //Prevent Editing Input Fields
 setDate();  //Set Time
+loadAllCustomerIds();
 
 $("#btnAddToCart").click(function(){
     addItemToCart();
@@ -18,8 +19,9 @@ $("#btnPurchase").click(function(){
 });
 
 $("#idCmb").change(function(){
-    selectedCustomerId = $('#idCmb').find(":selected").text();
-    selectedCustomer(selectedCustomerId);
+    // selectedCustomerId = $('#idCmb').find(":selected").text();
+     let s = $('#idCmb').find(":selected").text();
+    selectedCustomer(s);
 });
 
 $("#itemIdCmb").change(function(){
@@ -55,10 +57,27 @@ function loadAllCustomerIds() {
     let cusHint = `<option disabled selected>Select Customer ID</option>`;
     $("#idCmb").append(cusHint);
 
-    for (let i in customerDB) {
+    $.ajax({
+        url:"http://localhost:8080/pos/order?option=LOAD_CUS_ID",
+        method:"GET",
+        success:function (resp) {
+            console.log(resp.massage);
+            if (resp.status==200){
+                for (const customer of resp.data){
+                    let option = `<option value="${customer.id}">${customer.id}</option>`;
+                    $("#idCmb").append(option);
+                }
+
+            }else {
+                alert(resp.data);
+            }
+        }
+    })
+
+    /*for (let i in customerDB) {
         let option = `<option value="${customerDB[i].getCustomerID()}">${customerDB[i].getCustomerID()}</option>`;
         $("#idCmb").append(option);
-    }
+    }*/
 
 }
 
@@ -77,14 +96,31 @@ function loadAllItemCodes() {
 
 /* Load Customer Data To input Fields */
 function selectedCustomer(CustomerId) {
-    for (const i in customerDB) {
+
+    $.ajax({
+       url:`http://localhost:8080/pos/order?option=SELECTED_CUS&cusID=${CustomerId}`,
+        method: "GET",
+        success:function (resp) {
+            if (resp.status==200){
+                for (const customer of resp.data){
+                    $("#inCusName").val(customer.name);
+                    $("#inCusSalary").val(customer.salary);
+                    $("#inCusAddress").val(customer.address);
+                }
+            }else {
+                alert(resp.data);
+            }
+        }
+    });
+
+    /*for (const i in customerDB) {
         if (customerDB[i].getCustomerID()==CustomerId) {
             let element = customerDB[i];
             $("#inCusName").val(element.getCustomerName());
             $("#inCusSalary").val(element.getCustomerSalary());
             $("#inCusaddress").val(element.getCustomerAddress());
         }
-    }
+    }*/
 }
 
 /* Load Item Data To input Fields */
@@ -107,7 +143,21 @@ function disableEdit() {
 }
 
 function generateOrderId() {
-    let index = orderDB.length - 1;
+
+    $.ajax({
+       url:"http://localhost:8080/pos/order?option=GENERATED_OID",
+       method:'GET',
+        success:function (resp) {
+            if (resp.status == 200) {
+                $("#oId").val(resp.data.oId);
+            } else {
+                alert(resp.data);
+            }
+        }
+
+    });
+
+    /*let index = orderDB.length - 1;
     let id;
     let temp;
     if (index != -1) {
@@ -124,7 +174,7 @@ function generateOrderId() {
         $("#oId").val("O00-0" + temp);
     } else {
         $("#oId").val("O00-" + temp);
-    }
+    }*/
 }
 
 /* Set Current Date to datepicker */
