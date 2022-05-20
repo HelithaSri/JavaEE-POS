@@ -3,11 +3,14 @@ var selectedCustomerId;
 $("#discount").val(0);
 $("#cash").val(0);
 
-generateOrderId();  //Generate Order Id
-disableEdit();  //Prevent Editing Input Fields
-setDate();  //Set Time
-loadAllCustomerIds();
-loadAllItemCodes();
+
+$("#order-clicks").click(function (){
+    generateOrderId();  //Generate Order Id
+    disableEdit();  //Prevent Editing Input Fields
+    setDate();  //Set Time
+    loadAllCustomerIds();
+    loadAllItemCodes();
+});
 
 $("#btnAddToCart").click(function () {
     addItemToCart();
@@ -15,12 +18,10 @@ $("#btnAddToCart").click(function () {
 
 $("#btnPurchase").click(function () {
     purchaseOrder();
-
 });
 
 $("#idCmb").change(function () {
     selectedCustomerId = $('#idCmb').find(":selected").text();
-    // let s = $('#idCmb').find(":selected").text();
     selectedCustomer(selectedCustomerId);
 });
 
@@ -30,10 +31,7 @@ $("#itemIdCmb").change(function () {
 });
 
 $("#discount").keyup(function (event) {
-    // if (event.key == "Enter") {
     discountCal();
-    // alert("d");
-    // }
 });
 
 $("#cash").keyup(function (event) {
@@ -90,11 +88,6 @@ function loadAllItemCodes() {
             }
         }
     })
-
-    /*for (let i in itemDB) {
-        let option = `<option value="${itemDB[i].getItemCode()}">${itemDB[i].getItemCode()}</option>`;
-        $("#itemIdCmb").append(option);
-    }*/
 }
 
 /* Load Customer Data To input Fields */
@@ -135,14 +128,6 @@ function selectedItem(ItemId) {
             }
         }
     });
-    /*for (const i in itemDB) {
-        if (itemDB[i].getItemCode()==ItemId) {
-            let element = itemDB[i];
-            $("#itemNameO").val(element.getItemName());
-            $("#qtyOnHandO").val(element.getItemQty());
-            $("#priceO").val(element.getItemPrice());
-        }
-    }*/
 }
 
 /* Prevent Clicking input Fields */
@@ -164,32 +149,12 @@ function generateOrderId() {
         }
 
     });
-
-    /*let index = orderDB.length - 1;
-    let id;
-    let temp;
-    if (index != -1) {
-        id = orderDB[orderDB.length - 1].getOrderId();
-        temp = id.split("-")[1];
-        temp++;
-    }
-
-    if (index == -1) {
-        $("#oId").val("O00-001");
-    } else if (temp <= 9) {
-        $("#oId").val("O00-00" + temp);
-    } else if (temp <= 99) {
-        $("#oId").val("O00-0" + temp);
-    } else {
-        $("#oId").val("O00-" + temp);
-    }*/
 }
 
 /* Set Current Date to datepicker */
 function setDate() {
     let d = new Date();
     let dd = d.toISOString().split("T")[0].split("-");
-    // console.log(dd);
     $("#iDate").val(dd[0] + "-" + dd[1] + "-" + dd[2]);
     $("#hDate").text(dd[0] + "-" + dd[1] + "-" + dd[2]);
 }
@@ -244,7 +209,6 @@ function addItemToCart() {
         $("#lblFullTotal").text(fullTotal + " LKR");
         $("#lblSubTotal").text(fullTotal + " LKR");
 
-        // alert("23445");
         clearInputItems();
 
     } else {
@@ -265,7 +229,6 @@ function addItemToCart() {
 
         $("#lblFullTotal").text(fullTotal + " LKR");
         $("#lblSubTotal").text(fullTotal + " LKR");
-        // alert("test");
         clearInputItems();
     }
 
