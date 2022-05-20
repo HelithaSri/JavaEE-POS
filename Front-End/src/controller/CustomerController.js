@@ -77,7 +77,7 @@ $("#btnUpdateCus").click(function () {
                 alert(resp.data);
             }
         }
-    })
+    });
 });
 
 //Delete Customer Btn Click
