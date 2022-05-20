@@ -190,10 +190,13 @@ public class OrderServlet extends HttpServlet {
         try {
             connection = ds.getConnection();
             connection.setAutoCommit(false);
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO orders VALUES(?,?,?)");
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO orders VALUES(?,?,?,?,?,?)");
             pstm.setObject(1, order.getString("orderId"));
             pstm.setObject(2, order.getString("orderDate"));
             pstm.setObject(3, order.getString("customer"));
+            pstm.setObject(4, order.getInt("discount"));
+            pstm.setObject(5, order.getString("total"));
+            pstm.setObject(6, order.getString("subTotal"));
 
             if (pstm.executeUpdate() > 0) {
                 if (saveOrderDetails(order.getString("orderId"), orderDetail)) {
@@ -227,11 +230,12 @@ public class OrderServlet extends HttpServlet {
     public boolean saveOrderDetails(String oid, JsonArray orderDetail) throws SQLException {
         for (JsonValue orderDetails : orderDetail) {
             JsonObject orderDetailJsonObj = orderDetails.asJsonObject();
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO orderdetails VALUES(?,?,?,?)");
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO orderdetails VALUES(?,?,?,?,?)");
             pstm.setObject(1, oid);
             pstm.setObject(2, orderDetailJsonObj.getString("itemCode"));
             pstm.setObject(3, orderDetailJsonObj.getString("itemQty"));
             pstm.setObject(4, orderDetailJsonObj.getString("itemPrice"));
+            pstm.setObject(5, orderDetailJsonObj.getString("itemTotal"));
 
             /*String itemCode = orderDetailJsonObj.getString("itemCode");
             String itemName = orderDetailJsonObj.getString("itemName");
