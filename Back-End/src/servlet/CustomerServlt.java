@@ -224,7 +224,6 @@ public class CustomerServlt extends HttpServlet {
         //we have to get updated data from JSON format
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
-
         String cusIDUpdate = jsonObject.getString("id");
         String cusNameUpdate = jsonObject.getString("name");
         String cusAddressUpdate = jsonObject.getString("address");
