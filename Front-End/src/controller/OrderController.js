@@ -15,8 +15,7 @@ $("#btnAddToCart").click(function () {
 
 $("#btnPurchase").click(function () {
     purchaseOrder();
-    generateOrderId();
-    clearPurchaseFields();
+
 });
 
 $("#idCmb").change(function () {
@@ -298,7 +297,7 @@ function clearPurchaseFields() {
     $("#idCmb").val("Select Customer ID");
     $("#inCusName").val("");
     $("#inCusSalary").val("");
-    $("#inCusaddress").val("");
+    $("#inCusAddress").val("");
 
     $("#cash").val("");
     $("#discount").val("");
@@ -332,38 +331,16 @@ function purchaseOrder() {
 
     var obj = {
         order: {
+            orderId:$("#oId").val(),
             customer: selectedCustomerId,
             orderDate: $("#iDate").val(),
             discount: parseInt($("#discount").val()),
-            total: $("#lblFullTotal").text(),
-            subTotal: $("#lblSubTotal").text()
+            total: $("#lblFullTotal").text().split(" ")[0],
+            subTotal: $("#lblSubTotal").text().split(" ")[0]
         },
         orderDetail:[]
     }
 
-    /*let orderId = $("#oId").val();
-    let customer = selectedCustomerId;
-    let orderDate = $("#iDate").val();
-    let discount = parseInt($("#discount").val());
-    let total = $("#lblFullTotal").text();
-    let subTotal = $("#lblSubTotal").text();
-
-    var orderObj = new OrderDTO(orderId,customer,orderDate,discount,total,subTotal);
-    orderDB.push(orderObj);
-
-    for (let i = 0; i < $('#tbodyOrder tr').length; i++) {
-                    
-        tblItemId = $('#tbodyOrder').children().eq(i).children().eq(0).text();
-        tblItemName = $('#tbodyOrder').children().eq(i).children().eq(1).text();
-        tblItemPrice = $('#tbodyOrder').children().eq(i).children().eq(2).text();
-        tblItemQty = $('#tbodyOrder').children().eq(i).children().eq(3).text();
-        tblItemTotal = $('#tbodyOrder').children().eq(i).children().eq(4).text();
-
-        var orderDetailObj = new OrderDetailDTO(orderId,tblItemId,tblItemName,tblItemPrice,tblItemQty,tblItemTotal);
-        orderDetailsDB.push(orderDetailObj);
-    }*/
-
-    const itemArray=[];
     for (let i = 0; i < $('#tbodyOrder tr').length; i++) {
 
         tblItemId = $('#tbodyOrder').children().eq(i).children().eq(0).text();
@@ -380,18 +357,21 @@ function purchaseOrder() {
             itemTotal:tblItemTotal
         }
         obj.orderDetail.push(details);
-        // console.log(itemArray);
-    }
-    // obj.orderDetail.push(itemArray);
-    console.log(JSON.stringify(obj));
 
+    }
+    console.log(JSON.stringify(obj));
 
     $.ajax({
         url: "http://localhost:8080/pos/order",
         method: "POST",
         data: JSON.stringify(obj),
         success: function (resp) {
-
+            if (resp.status==200){
+                generateOrderId();
+                clearPurchaseFields();
+            }else {
+                alert(resp.data);
+            }
         }
     });
 
