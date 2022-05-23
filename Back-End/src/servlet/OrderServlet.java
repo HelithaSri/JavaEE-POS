@@ -133,6 +133,10 @@ public class OrderServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            dataMsgBuilder.add("data", e.getLocalizedMessage());
+            dataMsgBuilder.add("message", "Error");
+            dataMsgBuilder.add("status", 400);
+            writer.print(dataMsgBuilder.build());
         } finally {
             try {
                 connection.close();
