@@ -102,7 +102,7 @@ public class ItemServlet extends HttpServlet {
                     }
 
                     dataMsgBuilder.add("data", objectBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -127,7 +127,7 @@ public class ItemServlet extends HttpServlet {
                         System.out.println(itemCode + " " + itemName + " " + itemQtyOnHand + " " + itemUnitPrice);
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
 
                     writer.print(dataMsgBuilder.build());
@@ -154,7 +154,7 @@ public class ItemServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
 
                     writer.print(dataMsgBuilder.build());
@@ -189,7 +189,7 @@ public class ItemServlet extends HttpServlet {
             if (pstm.executeUpdate() > 0) {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
-                dataMsgBuilder.add("massage", "Item Deleted");
+                dataMsgBuilder.add("message", "Item Deleted");
                 dataMsgBuilder.add("status", "200");
                 writer.print(dataMsgBuilder.build());
             }

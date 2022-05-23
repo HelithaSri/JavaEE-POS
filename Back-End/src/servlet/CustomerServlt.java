@@ -102,7 +102,7 @@ public class CustomerServlt extends HttpServlet {
                     }
 
                     dataMsgBuilder.add("data", objectBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -128,7 +128,7 @@ public class CustomerServlt extends HttpServlet {
                     }
 //                    JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
 
 //                    PrintWriter writer = resp.getWriter();
@@ -158,7 +158,7 @@ public class CustomerServlt extends HttpServlet {
                         System.out.println(cusIDS + " " + cusNameS + " " + cusAddressS + " " + cusSalaryS);
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
 
                     writer.print(dataMsgBuilder.build());
@@ -198,7 +198,7 @@ public class CustomerServlt extends HttpServlet {
             if (pstm.executeUpdate() > 0) {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
-                dataMsgBuilder.add("massage", "Customer Deleted");
+                dataMsgBuilder.add("message", "Customer Deleted");
                 dataMsgBuilder.add("status", 200);
                 writer.print(dataMsgBuilder.build());
             }

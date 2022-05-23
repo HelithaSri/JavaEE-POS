@@ -68,14 +68,14 @@ public class OrderDetailsServlet extends HttpServlet {
                 arrayBuilder.add(objectBuilder.build());
             }
             dataMsgBuilder.add("data", arrayBuilder.build());
-            dataMsgBuilder.add("massage", "Done");
+            dataMsgBuilder.add("message", "Done");
             dataMsgBuilder.add("status", 200);
             writer.print(dataMsgBuilder.build());
 
         } catch (SQLException e) {
             e.printStackTrace();
             dataMsgBuilder.add("data", arrayBuilder.build());
-            dataMsgBuilder.add("massage", "Error");
+            dataMsgBuilder.add("message", "Error");
             dataMsgBuilder.add("status", 400);
             writer.print(dataMsgBuilder.build());
         }finally {

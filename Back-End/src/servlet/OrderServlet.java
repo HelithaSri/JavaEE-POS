@@ -51,7 +51,7 @@ public class OrderServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -70,7 +70,7 @@ public class OrderServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -92,7 +92,7 @@ public class OrderServlet extends HttpServlet {
                     }
 
                     dataMsgBuilder.add("data", objectBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -105,7 +105,7 @@ public class OrderServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
@@ -126,7 +126,7 @@ public class OrderServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
                     }
                     dataMsgBuilder.add("data", arrayBuilder.build());
-                    dataMsgBuilder.add("massage", "Done");
+                    dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
