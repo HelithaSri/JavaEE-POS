@@ -4,6 +4,8 @@ import dao.custom.ItemDAO;
 import entity.Item;
 import servlet.ItemServlet;
 
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,6 +17,21 @@ import java.sql.SQLException;
  */
 
 public class ItemDAOImpl implements ItemDAO {
+    @Override
+    public JsonArrayBuilder getAll() {
+        return null;
+    }
+
+    @Override
+    public JsonObjectBuilder generateID() throws SQLException {
+        return null;
+    }
+
+    @Override
+    public JsonArrayBuilder search(String id) throws SQLException {
+        return null;
+    }
+
     @Override
     public boolean add(Item item) throws SQLException {
         Connection conn = ItemServlet.ds.getConnection();
