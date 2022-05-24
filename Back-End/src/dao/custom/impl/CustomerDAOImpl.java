@@ -7,7 +7,6 @@ import servlet.CustomerServlt;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +23,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
     @Override
-    public JsonArrayBuilder getAll() throws SQLException {
+    public JsonArrayBuilder getAll() throws SQLException, ClassNotFoundException {
         Connection conn = CustomerServlt.ds.getConnection();
         ResultSet rst = conn.prepareStatement("SELECT * FROM customer").executeQuery();
         while (rst.next()) {
@@ -44,7 +43,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
             System.out.println(cusID + " " + cusAddress + " " + cusName + " " + cusSalary);
         }
-        conn.close();
+//        conn.close();
         return arrayBuilder;
     }
 

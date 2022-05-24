@@ -11,7 +11,7 @@ import java.sql.SQLException;
  */
 
 public interface CrudDAO<S,Id> extends SuperDAO {
-    JsonArrayBuilder getAll() throws SQLException;
+    JsonArrayBuilder getAll() throws SQLException, ClassNotFoundException;
     JsonObjectBuilder generateID() throws SQLException;
     JsonArrayBuilder search(String id) throws SQLException;
 

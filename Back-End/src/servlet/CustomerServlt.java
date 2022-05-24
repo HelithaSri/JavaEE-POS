@@ -166,6 +166,8 @@ public class CustomerServlt extends HttpServlet {
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
             try {
                 connection.close();

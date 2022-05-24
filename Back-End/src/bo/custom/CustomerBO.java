@@ -14,7 +14,7 @@ import java.sql.SQLException;
  */
 
 public interface CustomerBO extends SuperBO {
-    JsonArrayBuilder getAllCustomer() throws SQLException;
+    JsonArrayBuilder getAllCustomer() throws SQLException, ClassNotFoundException;
     JsonObjectBuilder generateCustomerID() throws SQLException;
     JsonArrayBuilder searchCustomer(String id) throws SQLException;
     boolean addCustomer(CustomerDTO customerDTO) throws SQLException;

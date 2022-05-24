@@ -21,7 +21,7 @@ public class CustomerBOImpl implements CustomerBO {
 
 
     @Override
-    public JsonArrayBuilder getAllCustomer() throws SQLException {
+    public JsonArrayBuilder getAllCustomer() throws SQLException, ClassNotFoundException {
         return customerDAO.getAll();
     }
 
