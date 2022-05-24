@@ -323,7 +323,6 @@ function purchaseOrder() {
 
     }
     console.log(JSON.stringify(obj));
-
     $.ajax({
         url: "http://localhost:8080/pos/order",
         method: "POST",
@@ -336,6 +335,7 @@ function purchaseOrder() {
                 alert(resp.data);
             }
         }
+
     });
 
 }
