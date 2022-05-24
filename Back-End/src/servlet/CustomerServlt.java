@@ -1,5 +1,11 @@
 package servlet;
 
+import bo.BOFactory;
+import bo.custom.CustomerBO;
+import bo.custom.impl.CustomerBOImpl;
+import dto.CustomerDTO;
+import entity.Customer;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -24,8 +30,10 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/customer")
 public class CustomerServlt extends HttpServlet {
 
+    CustomerBOImpl customerBO = (CustomerBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.CUSTOMER);
+
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+    public static DataSource ds;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,18 +43,19 @@ public class CustomerServlt extends HttpServlet {
         String cusName = req.getParameter("cusName");
         String cusAddress = req.getParameter("cusAddress");
         String cusSalary = req.getParameter("cusSalary");
+        CustomerDTO customerDTO = new CustomerDTO(cusID, cusName, cusAddress, Integer.parseInt(cusSalary));
         PrintWriter writer = resp.getWriter();
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO customer values(?,?,?,?)");
             pstm.setObject(1, cusID);
             pstm.setObject(2, cusName);
             pstm.setObject(3, cusAddress);
-            pstm.setObject(4, cusSalary);
+            pstm.setObject(4, cusSalary);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (customerBO.addCustomer(customerDTO)) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
@@ -62,13 +71,13 @@ public class CustomerServlt extends HttpServlet {
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override
@@ -189,13 +198,13 @@ public class CustomerServlt extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM customer WHERE id=?");
-            pstm.setObject(1, customerID);
+            pstm.setObject(1, customerID);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (customerBO.deleteCustomer(customerID)) {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
                 dataMsgBuilder.add("message", "Customer Deleted");
@@ -208,13 +217,13 @@ public class CustomerServlt extends HttpServlet {
             dataMsgBuilder.add("data", e.getLocalizedMessage());
             writer.print(dataMsgBuilder.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override
@@ -228,19 +237,21 @@ public class CustomerServlt extends HttpServlet {
         String cusNameUpdate = jsonObject.getString("name");
         String cusAddressUpdate = jsonObject.getString("address");
         String cusSalaryUpdate = jsonObject.getString("salary");
+        CustomerDTO customerDTO = new CustomerDTO(cusIDUpdate, cusNameUpdate, cusAddressUpdate, Integer.parseInt(cusSalaryUpdate));
         PrintWriter writer = resp.getWriter();
         System.out.println(cusIDUpdate + " " + cusAddressUpdate + " " + cusSalaryUpdate + " " + cusNameUpdate);
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE customer SET name=?, address=?, salary=? WHERE id=?");
             pstm.setObject(1, cusNameUpdate);
             pstm.setObject(2, cusAddressUpdate);
             pstm.setObject(3, cusSalaryUpdate);
-            pstm.setObject(4, cusIDUpdate);
+            pstm.setObject(4, cusIDUpdate);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (customerBO.updateCustomer(customerDTO)) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
@@ -256,12 +267,12 @@ public class CustomerServlt extends HttpServlet {
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }
