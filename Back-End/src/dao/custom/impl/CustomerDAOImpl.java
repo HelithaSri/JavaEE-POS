@@ -25,8 +25,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public JsonArrayBuilder getAll() throws SQLException {
-
-//        JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         Connection conn = CustomerServlt.ds.getConnection();
         ResultSet rst = conn.prepareStatement("SELECT * FROM customer").executeQuery();
         while (rst.next()) {
