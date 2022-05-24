@@ -23,7 +23,7 @@ import java.sql.SQLException;
 @WebServlet(urlPatterns = "/item")
 public class ItemServlet extends HttpServlet {
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+    public static DataSource ds;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

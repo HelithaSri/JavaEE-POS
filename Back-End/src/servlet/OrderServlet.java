@@ -25,7 +25,7 @@ public class OrderServlet extends HttpServlet {
     Connection connection = null;
 
     @Resource(name = "java:comp/env/jdbc/pool")
-    DataSource ds;
+    public static DataSource ds;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
