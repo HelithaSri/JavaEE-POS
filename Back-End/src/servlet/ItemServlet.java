@@ -1,5 +1,9 @@
 package servlet;
 
+import bo.BOFactory;
+import bo.custom.impl.ItemBOImpl;
+import dto.ItemDTO;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -22,6 +26,8 @@ import java.sql.SQLException;
  */
 @WebServlet(urlPatterns = "/item")
 public class ItemServlet extends HttpServlet {
+    ItemBOImpl itemBO = (ItemBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ITEM);
+
     @Resource(name = "java:comp/env/jdbc/pool")
     public static DataSource ds;
 
@@ -34,17 +40,19 @@ public class ItemServlet extends HttpServlet {
         int itemQty = Integer.parseInt(req.getParameter("itemQtyF"));
         int itemPrice = Integer.parseInt(req.getParameter("itemPriceF"));
 
+        ItemDTO itemDTO = new ItemDTO(itemCode, itemName, itemQty, itemPrice);
+
         PrintWriter writer = resp.getWriter();
-        Connection connection = null;
+        /*Connection connection = null;*/
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO item VALUE(?,?,?,?)");
             pstm.setObject(1, itemCode);
             pstm.setObject(2, itemName);
             pstm.setObject(3, itemQty);
-            pstm.setObject(4, itemPrice);
+            pstm.setObject(4, itemPrice);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (itemBO.addItem(itemDTO)) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
@@ -61,13 +69,13 @@ public class ItemServlet extends HttpServlet {
             writer.print(response.build());
             resp.setStatus(HttpServletResponse.SC_OK);
             e.printStackTrace();
-        } finally {
+        }/* finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
 
     }
@@ -180,13 +188,13 @@ public class ItemServlet extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM item WHERE code=?");
-            pstm.setObject(1, itemCode);
+            pstm.setObject(1, itemCode);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (itemBO.deleteItem(itemCode)) {
                 resp.setStatus(HttpServletResponse.SC_OK); //200
                 dataMsgBuilder.add("data", "");
                 dataMsgBuilder.add("message", "Item Deleted");
@@ -199,13 +207,13 @@ public class ItemServlet extends HttpServlet {
             dataMsgBuilder.add("data", e.getLocalizedMessage());
             writer.print(dataMsgBuilder.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     @Override
@@ -220,19 +228,20 @@ public class ItemServlet extends HttpServlet {
         String name = jsonObject.getString("name");
         int qtyOnHand = jsonObject.getInt("qtyOnHand");
         int unitPrice = jsonObject.getInt("unitPrice");
+        ItemDTO itemDTO = new ItemDTO(code, name, qtyOnHand, unitPrice);
         PrintWriter writer = resp.getWriter();
         System.out.println(code + " " + name + " " + qtyOnHand + " " + unitPrice);
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE item SET description=?, qtyOnHand=?, unitPrice=? WHERE code=?");
             pstm.setObject(1, name);
             pstm.setObject(2, qtyOnHand);
             pstm.setObject(3, unitPrice);
-            pstm.setObject(4, code);
+            pstm.setObject(4, code);*/
 
-            if (pstm.executeUpdate() > 0) {
+            if (itemBO.updateItem(itemDTO)) {
                 JsonObjectBuilder response = Json.createObjectBuilder();
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
@@ -248,12 +257,12 @@ public class ItemServlet extends HttpServlet {
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
             resp.setStatus(HttpServletResponse.SC_OK); //200
-        } finally {
+        } /*finally {
             try {
                 connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 }
