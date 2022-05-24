@@ -94,7 +94,7 @@ public class ItemServlet extends HttpServlet {
             String option = req.getParameter("option");
             switch (option) {
                 case "GENERATED_ID":
-                    ResultSet rstI = connection.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
+                    /*ResultSet rstI = connection.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
                     if (rstI.next()) {
                         int tempId = Integer.parseInt(rstI.getString(1).split("-")[1]);
                         tempId += 1;
@@ -107,16 +107,15 @@ public class ItemServlet extends HttpServlet {
                         }
                     } else {
                         objectBuilder.add("code", "I00-000");
-                    }
-
-                    dataMsgBuilder.add("data", objectBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data", itemBO.generateItemID());
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
                     writer.print(dataMsgBuilder.build());
                     break;
 
                 case "GETALL":
-                    ResultSet rst = connection.prepareStatement("SELECT * FROM item").executeQuery();
+                    /*ResultSet rst = connection.prepareStatement("SELECT * FROM item").executeQuery();
                     while (rst.next()) {
                         String itemCode = rst.getString(1);
                         String itemName = rst.getString(2);
@@ -133,8 +132,9 @@ public class ItemServlet extends HttpServlet {
                         arrayBuilder.add(objectBuilder.build());
 
                         System.out.println(itemCode + " " + itemName + " " + itemQtyOnHand + " " + itemUnitPrice);
-                    }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    dataMsgBuilder.add("data", itemBO.getAllItems());
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
 
@@ -142,7 +142,7 @@ public class ItemServlet extends HttpServlet {
                     break;
                 case "SEARCH":
                     String id = req.getParameter("code");
-                    PreparedStatement pstm = connection.prepareStatement("SELECT * FROM item WHERE code LIKE ?");
+                    /*PreparedStatement pstm = connection.prepareStatement("SELECT * FROM item WHERE code LIKE ?");
                     pstm.setObject(1, "%"+id+"%");
                     ResultSet resultSet = pstm.executeQuery();
 
@@ -160,8 +160,9 @@ public class ItemServlet extends HttpServlet {
                         objectBuilder.add("unitPrice", itemUnitPriceS);
 
                         arrayBuilder.add(objectBuilder.build());
-                    }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    resp.setStatus(HttpServletResponse.SC_OK);//201
+                    dataMsgBuilder.add("data", itemBO.searchItem(id));
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", "200");
 

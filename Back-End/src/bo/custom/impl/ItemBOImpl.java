@@ -6,6 +6,8 @@ import dao.custom.impl.ItemDAOImpl;
 import dto.ItemDTO;
 import entity.Item;
 
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import java.sql.SQLException;
 
 /**
@@ -16,6 +18,21 @@ import java.sql.SQLException;
 
 public class ItemBOImpl implements ItemBO {
     ItemDAOImpl itemDAO = (ItemDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ITEM);
+
+    @Override
+    public JsonArrayBuilder getAllItems() throws SQLException {
+        return itemDAO.getAll();
+    }
+
+    @Override
+    public JsonObjectBuilder generateItemID() throws SQLException {
+        return itemDAO.generateID();
+    }
+
+    @Override
+    public JsonArrayBuilder searchItem(String id) throws SQLException {
+        return itemDAO.search(id);
+    }
 
     @Override
     public boolean addItem(ItemDTO itemDTO) throws SQLException {

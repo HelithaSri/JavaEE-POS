@@ -4,10 +4,13 @@ import dao.custom.ItemDAO;
 import entity.Item;
 import servlet.ItemServlet;
 
+import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -17,19 +20,75 @@ import java.sql.SQLException;
  */
 
 public class ItemDAOImpl implements ItemDAO {
+    JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+    JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+
     @Override
-    public JsonArrayBuilder getAll() {
-        return null;
+    public JsonArrayBuilder getAll() throws SQLException {
+        Connection conn = ItemServlet.ds.getConnection();
+        ResultSet rst = conn.prepareStatement("SELECT * FROM item").executeQuery();
+        while (rst.next()) {
+            String itemCode = rst.getString(1);
+            String itemName = rst.getString(2);
+            int itemQtyOnHand = rst.getInt(3);
+            int itemUnitPrice = rst.getInt(4);
+
+            objectBuilder.add("code", itemCode);
+            objectBuilder.add("name", itemName);
+            objectBuilder.add("qtyOnHand", itemQtyOnHand);
+            objectBuilder.add("unitPrice", itemUnitPrice);
+
+            arrayBuilder.add(objectBuilder.build());
+
+            System.out.println(itemCode + " " + itemName + " " + itemQtyOnHand + " " + itemUnitPrice);
+        }
+        conn.close();
+        return arrayBuilder;
     }
 
     @Override
     public JsonObjectBuilder generateID() throws SQLException {
-        return null;
+        Connection conn = ItemServlet.ds.getConnection();
+        ResultSet rstI = conn.prepareStatement("SELECT code FROM item ORDER BY code DESC LIMIT 1").executeQuery();
+        if (rstI.next()) {
+            int tempId = Integer.parseInt(rstI.getString(1).split("-")[1]);
+            tempId += 1;
+            if (tempId < 10) {
+                objectBuilder.add("code", "I00-00" + tempId);
+            } else if (tempId < 100) {
+                objectBuilder.add("code", "I00-0" + tempId);
+            } else if (tempId < 1000) {
+                objectBuilder.add("code", "I00-" + tempId);
+            }
+        } else {
+            objectBuilder.add("code", "I00-000");
+        }
+        conn.close();
+        return objectBuilder;
     }
 
     @Override
     public JsonArrayBuilder search(String id) throws SQLException {
-        return null;
+        Connection conn = ItemServlet.ds.getConnection();
+        PreparedStatement pstm = conn.prepareStatement("SELECT * FROM item WHERE CONCAT(code,description) LIKE ?");
+        pstm.setObject(1, "%"+id+"%");
+        ResultSet resultSet = pstm.executeQuery();
+
+        while (resultSet.next()) {
+            String itemCodeS = resultSet.getString(1);
+            String itemNameS = resultSet.getString(2);
+            int itemQtyOnHandS = resultSet.getInt(3);
+            int itemUnitPriceS = resultSet.getInt(4);
+
+            objectBuilder.add("code", itemCodeS);
+            objectBuilder.add("name", itemNameS);
+            objectBuilder.add("qtyOnHand", itemQtyOnHandS);
+            objectBuilder.add("unitPrice", itemUnitPriceS);
+
+            arrayBuilder.add(objectBuilder.build());
+        }
+        conn.close();
+        return arrayBuilder;
     }
 
     @Override

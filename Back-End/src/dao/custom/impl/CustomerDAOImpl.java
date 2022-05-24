@@ -65,6 +65,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         } else {
             objectBuilder.add("id", "C00-000");
         }
+        conn.close();
         return objectBuilder;
     }
 
@@ -90,6 +91,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
             System.out.println(cusIDS + " " + cusNameS + " " + cusAddressS + " " + cusSalaryS);
         }
+        conn.close();
         return arrayBuilder;
     }
 
