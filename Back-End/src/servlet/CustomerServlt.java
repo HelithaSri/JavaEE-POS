@@ -89,9 +89,9 @@ public class CustomerServlt extends HttpServlet {
         JsonObjectBuilder dataMsgBuilder = Json.createObjectBuilder();
         PrintWriter writer = resp.getWriter();
 
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+//            connection = ds.getConnection();
             String option = req.getParameter("option");
             switch (option) {
                 case "GENERATED_ID":
@@ -168,12 +168,6 @@ public class CustomerServlt extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK); //200
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

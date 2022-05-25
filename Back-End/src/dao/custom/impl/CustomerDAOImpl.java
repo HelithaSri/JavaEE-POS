@@ -3,10 +3,13 @@ package dao.custom.impl;
 import dao.custom.CustomerDAO;
 import entity.Customer;
 import servlet.CustomerServlt;
+import servlet.OrderServlet;
 
+import javax.annotation.Resource;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +25,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
+    
+    
     @Override
     public JsonArrayBuilder getAll() throws SQLException, ClassNotFoundException {
         Connection conn = CustomerServlt.ds.getConnection();
@@ -43,7 +48,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
             System.out.println(cusID + " " + cusAddress + " " + cusName + " " + cusSalary);
         }
-//        conn.close();
+        conn.close();
         return arrayBuilder;
     }
 
@@ -128,5 +133,40 @@ public class CustomerDAOImpl implements CustomerDAO {
         boolean b = pstm.executeUpdate() > 0;
         con.close();
         return b;
+    }
+
+    @Override
+    public JsonArrayBuilder loadCusId() throws SQLException {
+        System.out.println("2");
+        Connection conn = OrderServlet.ds.getConnection();
+        ResultSet rst = conn.prepareStatement("SELECT id FROM customer").executeQuery();
+        while (rst.next()) {
+            String id = rst.getString(1);
+            objectBuilder.add("id", id);
+            arrayBuilder.add(objectBuilder.build());
+            System.out.println("3");
+        }
+//        System.out.println(arrayBuilder);
+        conn.close();
+        return arrayBuilder;
+    }
+
+    @Override
+    public JsonArrayBuilder loadSelectCusDetails(String id) throws SQLException {
+        Connection conn = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = conn.prepareStatement("SELECT * FROM customer WHERE id=?");
+        pstm.setObject(1, id);
+        ResultSet rst = pstm.executeQuery();
+        if (rst.next()) {
+            String cusName = rst.getString(2);
+            String cusAddress = rst.getString(3);
+            String cusSalary = rst.getString(4);
+            objectBuilder.add("name", cusName);
+            objectBuilder.add("address", cusAddress);
+            objectBuilder.add("salary", cusSalary);
+            arrayBuilder.add(objectBuilder.build());
+        }
+        conn.close();
+        return arrayBuilder;
     }
 }

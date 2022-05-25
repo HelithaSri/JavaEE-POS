@@ -1,5 +1,10 @@
 package servlet;
 
+import bo.BOFactory;
+import bo.custom.impl.CustomerBOImpl;
+import bo.custom.impl.ItemBOImpl;
+import bo.custom.impl.OrdersBOImpl;
+
 import javax.annotation.Resource;
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -22,6 +27,10 @@ import java.sql.SQLException;
  */
 @WebServlet(urlPatterns = "/order")
 public class OrderServlet extends HttpServlet {
+    CustomerBOImpl customerBO = (CustomerBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.CUSTOMER);
+    ItemBOImpl itemBO = (ItemBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ITEM);
+    OrdersBOImpl ordersBO = (OrdersBOImpl) BOFactory.getBoFactory().getBO(BOFactory.BoTypes.ORDER);
+
     Connection connection = null;
 
     @Resource(name = "java:comp/env/jdbc/pool")
@@ -36,28 +45,34 @@ public class OrderServlet extends HttpServlet {
         PrintWriter writer = resp.getWriter();
 
         resp.setStatus(HttpServletResponse.SC_OK);//200
-        Connection connection = null;
+//        Connection connection = null;
         try {
-            connection = ds.getConnection();
+            /*connection = ds.getConnection();
             ResultSet rst;
-            PreparedStatement pstm;
+            PreparedStatement pstm;*/
             String option = req.getParameter("option");
             switch (option) {
                 case "LOAD_CUS_ID":
+                    System.out.println("1");
+                    /*
                     rst = connection.prepareStatement("SELECT id FROM customer").executeQuery();
                     while (rst.next()) {
                         String id = rst.getString(1);
                         objectBuilder.add("id", id);
                         arrayBuilder.add(objectBuilder.build());
                     }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    resp.setStatus(HttpServletResponse.SC_OK);//200*/
+                    dataMsgBuilder.add("data", customerBO.loadAllCusIDs());
+//                    dataMsgBuilder.add("data", arrayBuilder.build());
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
+                    System.out.println("4");
                     break;
+
                 case "SELECTED_CUS":
                     String selectID = req.getParameter("cusID");
-                    pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
+                    /*pstm = connection.prepareStatement("SELECT * FROM customer WHERE id=?");
                     pstm.setObject(1, selectID);
                     rst = pstm.executeQuery();
                     if (rst.next()) {
@@ -68,15 +83,15 @@ public class OrderServlet extends HttpServlet {
                         objectBuilder.add("address", cusAddress);
                         objectBuilder.add("salary", cusSalary);
                         arrayBuilder.add(objectBuilder.build());
-                    }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data", customerBO.loadSelectedCusData(selectID));
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
 
                 case "GENERATED_OID":
-                    rst = connection.prepareStatement("SELECT oid FROM orders ORDER BY oid DESC LIMIT 1").executeQuery();
+                    /*rst = connection.prepareStatement("SELECT oid FROM orders ORDER BY oid DESC LIMIT 1").executeQuery();
                     if (rst.next()) {
                         int tempId = Integer.parseInt(rst.getString(1).split("-")[1]);
                         tempId += 1;
@@ -89,22 +104,22 @@ public class OrderServlet extends HttpServlet {
                         }
                     } else {
                         objectBuilder.add("oId", "O00-000");
-                    }
+                    }*/
 
-                    dataMsgBuilder.add("data", objectBuilder.build());
+                    dataMsgBuilder.add("data", ordersBO.generateID());
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
                     break;
 
                 case "LOAD_ITEM_ID":
-                    rst = connection.prepareStatement("SELECT code FROM item").executeQuery();
+                    /*rst = connection.prepareStatement("SELECT code FROM item").executeQuery();
                     while (rst.next()) {
                         String code = rst.getString(1);
                         objectBuilder.add("code", code);
                         arrayBuilder.add(objectBuilder.build());
-                    }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data", itemBO.loadAllItemIDs());
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
@@ -112,7 +127,7 @@ public class OrderServlet extends HttpServlet {
 
                 case "SELECTED_ITEM":
                     String selectItemID = req.getParameter("itemID");
-                    pstm = connection.prepareStatement("SELECT * FROM item WHERE code=?");
+                    /*pstm = connection.prepareStatement("SELECT * FROM item WHERE code=?");
                     pstm.setObject(1, selectItemID);
                     rst = pstm.executeQuery();
                     if (rst.next()) {
@@ -124,8 +139,8 @@ public class OrderServlet extends HttpServlet {
                         objectBuilder.add("qtyOnHand", qtyOnHand);
                         objectBuilder.add("unitPrice", unitPrice);
                         arrayBuilder.add(objectBuilder.build());
-                    }
-                    dataMsgBuilder.add("data", arrayBuilder.build());
+                    }*/
+                    dataMsgBuilder.add("data", itemBO.loadSelectedItemData(selectItemID));
                     dataMsgBuilder.add("message", "Done");
                     dataMsgBuilder.add("status", 200);
                     writer.print(dataMsgBuilder.build());
@@ -133,16 +148,11 @@ public class OrderServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+//            resp.setStatus(HttpServletResponse.SC_OK);//200
             dataMsgBuilder.add("data", e.getLocalizedMessage());
             dataMsgBuilder.add("message", "Error");
             dataMsgBuilder.add("status", 400);
             writer.print(dataMsgBuilder.build());
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 

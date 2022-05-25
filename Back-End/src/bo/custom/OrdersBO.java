@@ -4,6 +4,9 @@ import bo.SuperBO;
 import dto.ItemDTO;
 import dto.OrdersDTO;
 
+import javax.json.JsonObjectBuilder;
+import java.sql.SQLException;
+
 /**
  * @author Helitha Sri
  * @created 5/24/2022 - 4:55 PM
@@ -12,4 +15,5 @@ import dto.OrdersDTO;
 
 public interface OrdersBO extends SuperBO {
     boolean addOrder(OrdersDTO ordersDTO);
+    JsonObjectBuilder generateID() throws SQLException;
 }
