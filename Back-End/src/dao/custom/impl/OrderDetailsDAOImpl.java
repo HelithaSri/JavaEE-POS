@@ -54,8 +54,7 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
 
     @Override
     public boolean saveOrderDetails(String id, ArrayList<OrderDetails> dtos) throws SQLException {
-        for (OrderDetails items:dtos) {
-            System.out.println("save od s");
+        for (OrderDetails items : dtos) {
             Connection connection = OrderServlet.ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO orderdetails VALUES(?,?,?,?,?)");
             pstm.setObject(1, items.getOid());
@@ -63,15 +62,12 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
             pstm.setObject(3, items.getQty());
             pstm.setObject(4, items.getUnitPrice());
             pstm.setObject(5, items.getTotal());
-            if (pstm.executeUpdate()>0){
-                if (itemDAO.updateQty(items.getItemCode(),items.getQty())){
-                    System.out.println("i update done");
-                }else {
-                    System.out.println("i not update");
+            if (pstm.executeUpdate() > 0) {
+                if (itemDAO.updateQty(items.getItemCode(), items.getQty())) {
+                } else {
                     return false;
                 }
-            }else {
-                System.out.println("od not add");
+            } else {
                 return false;
             }
         }

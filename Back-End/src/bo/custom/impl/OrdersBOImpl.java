@@ -21,6 +21,7 @@ import java.sql.SQLException;
 public class OrdersBOImpl implements OrdersBO {
     OrderDAOImpl orderDAO = (OrderDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER);
     OrderDetailsDAOImpl orderDetailsDAO = (OrderDetailsDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
+
     @Override
     public boolean addOrder(OrdersDTO ordersDTO) {
         Connection connection = null;
@@ -28,25 +29,21 @@ public class OrdersBOImpl implements OrdersBO {
             connection = OrderServlet.ds.getConnection();
             connection.setAutoCommit(false);
 
-            if (orderDAO.saveOd(new Orders(ordersDTO.getOid(),ordersDTO.getDate(),ordersDTO.getCustomerID(),ordersDTO.getDiscount(),ordersDTO.getTotal(),ordersDTO.getSubTotal()))){
-                System.out.println("add o s");
-                if (orderDetailsDAO.saveOrderDetails(ordersDTO.getOid(),ordersDTO.getOrderDetailsArrayList())){
-                    System.out.println("add od s");
+            if (orderDAO.saveOd(new Orders(ordersDTO.getOid(), ordersDTO.getDate(), ordersDTO.getCustomerID(), ordersDTO.getDiscount(), ordersDTO.getTotal(), ordersDTO.getSubTotal()))) {
+                if (orderDetailsDAO.saveOrderDetails(ordersDTO.getOid(), ordersDTO.getOrderDetailsArrayList())) {
                     connection.commit();
                     return true;
-                }else {
-                    System.out.println("add od e");
+                } else {
                     connection.rollback();
                     return false;
                 }
-            }else {
-                System.out.println("add o e");
+            } else {
                 connection.rollback();
                 return false;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             try {
                 connection.setAutoCommit(true);
                 connection.close();

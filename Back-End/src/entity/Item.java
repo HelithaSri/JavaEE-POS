@@ -57,11 +57,6 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
-                "code='" + code + '\'' +
-                ", description='" + description + '\'' +
-                ", qtyOnHand=" + qtyOnHand +
-                ", unitPrice=" + unitPrice +
-                '}';
+        return "Item{" + "code='" + code + '\'' + ", description='" + description + '\'' + ", qtyOnHand=" + qtyOnHand + ", unitPrice=" + unitPrice + '}';
     }
 }

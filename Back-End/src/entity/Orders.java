@@ -77,13 +77,6 @@ public class Orders {
 
     @Override
     public String toString() {
-        return "Orders{" +
-                "oid='" + oid + '\'' +
-                ", date='" + date + '\'' +
-                ", customerID='" + customerID + '\'' +
-                ", discount=" + discount +
-                ", total=" + total +
-                ", subTotal=" + subTotal +
-                '}';
+        return "Orders{" + "oid='" + oid + '\'' + ", date='" + date + '\'' + ", customerID='" + customerID + '\'' + ", discount=" + discount + ", total=" + total + ", subTotal=" + subTotal + '}';
     }
 }

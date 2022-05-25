@@ -12,6 +12,6 @@ import java.util.ArrayList;
  * @project JavaEE POS Backend
  */
 
-public interface OrderDetailsDAO extends CrudDAO<entity.OrderDetails,String> {
+public interface OrderDetailsDAO extends CrudDAO<entity.OrderDetails, String> {
     boolean saveOrderDetails(String id, ArrayList<OrderDetails> dtos) throws SQLException;
 }
