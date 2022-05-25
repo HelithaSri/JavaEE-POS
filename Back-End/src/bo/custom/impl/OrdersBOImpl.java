@@ -3,9 +3,13 @@ package bo.custom.impl;
 import bo.custom.OrdersBO;
 import dao.DAOFactory;
 import dao.custom.impl.OrderDAOImpl;
+import dao.custom.impl.OrderDetailsDAOImpl;
 import dto.OrdersDTO;
+import entity.Orders;
+import servlet.OrderServlet;
 
 import javax.json.JsonObjectBuilder;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -16,9 +20,41 @@ import java.sql.SQLException;
 
 public class OrdersBOImpl implements OrdersBO {
     OrderDAOImpl orderDAO = (OrderDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER);
-
+    OrderDetailsDAOImpl orderDetailsDAO = (OrderDetailsDAOImpl) DAOFactory.getDAOFactory().getDAO(DAOFactory.DAOTypes.ORDER_DETAILS);
     @Override
     public boolean addOrder(OrdersDTO ordersDTO) {
+        Connection connection = null;
+        try {
+            connection = OrderServlet.ds.getConnection();
+            connection.setAutoCommit(false);
+
+            if (orderDAO.saveOd(new Orders(ordersDTO.getOid(),ordersDTO.getDate(),ordersDTO.getCustomerID(),ordersDTO.getDiscount(),ordersDTO.getTotal(),ordersDTO.getSubTotal()))){
+                System.out.println("add o s");
+                if (orderDetailsDAO.saveOrderDetails(ordersDTO.getOid(),ordersDTO.getOrderDetailsArrayList())){
+                    System.out.println("add od s");
+                    connection.commit();
+                    return true;
+                }else {
+                    System.out.println("add od e");
+                    connection.rollback();
+                    return false;
+                }
+            }else {
+                System.out.println("add o e");
+                connection.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                connection.setAutoCommit(true);
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         return false;
     }
 

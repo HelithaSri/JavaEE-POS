@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 
 public interface OrdersBO extends SuperBO {
-    boolean addOrder(OrdersDTO ordersDTO);
+    boolean addOrder(OrdersDTO ordersDTO) throws SQLException;
 
     JsonObjectBuilder generateID() throws SQLException;
 }

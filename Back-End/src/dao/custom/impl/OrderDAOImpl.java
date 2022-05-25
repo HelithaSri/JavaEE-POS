@@ -1,6 +1,7 @@
 package dao.custom.impl;
 
 import dao.custom.OrderDAO;
+import dto.OrdersDTO;
 import entity.Orders;
 import servlet.OrderServlet;
 
@@ -8,6 +9,7 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -63,5 +65,18 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public boolean update(Orders orders) {
         return false;
+    }
+
+    @Override
+    public boolean saveOd(Orders orders) throws SQLException {
+        Connection conn = OrderServlet.ds.getConnection();
+        PreparedStatement pstm = conn.prepareStatement("INSERT INTO orders VALUES(?,?,?,?,?,?)");
+        pstm.setObject(1, orders.getOid());
+        pstm.setObject(2, orders.getDate());
+        pstm.setObject(3, orders.getCustomerID());
+        pstm.setObject(4, orders.getDiscount());
+        pstm.setObject(5, orders.getTotal());
+        pstm.setObject(6, orders.getSubTotal());
+        return pstm.executeUpdate()>0;
     }
 }

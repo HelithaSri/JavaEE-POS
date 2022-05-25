@@ -4,6 +4,8 @@ import bo.BOFactory;
 import bo.custom.impl.CustomerBOImpl;
 import bo.custom.impl.ItemBOImpl;
 import bo.custom.impl.OrdersBOImpl;
+import dto.OrderDetails;
+import dto.OrdersDTO;
 
 import javax.annotation.Resource;
 import javax.json.*;
@@ -18,6 +20,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author Helitha Sri
@@ -117,25 +120,50 @@ public class OrderServlet extends HttpServlet {
             String itemCode = orderDetailJsonObj.getString("itemCode");
             System.out.println(itemCode);
         }*/
+
+        ArrayList<OrderDetails> orderDetails = new ArrayList<>();
+        for (JsonValue value:orderDetail) {
+            JsonObject jObj = value.asJsonObject();
+            orderDetails.add(new OrderDetails(
+                    order.getString("orderId"),
+                    jObj.getString("itemCode"),
+                    Integer.parseInt(jObj.getString("itemQty")),
+                    Double.parseDouble(jObj.getString("itemPrice")),
+                    Integer.parseInt(jObj.getString("itemTotal"))
+                    ));
+        }
+
+        OrdersDTO ordersDTO = new OrdersDTO(
+                order.getString("orderId"),
+                order.getString("orderDate"),
+                order.getString("customer"),
+                order.getInt("discount"),
+                Double.parseDouble(order.getString("total")),
+                Double.parseDouble(order.getString("subTotal")),
+                orderDetails
+        );
+
         System.out.println("before if");
         JsonObjectBuilder response = Json.createObjectBuilder();
-        if (saveOrder(order, orderDetail)) {
-            System.out.println("true");
-            resp.setStatus(HttpServletResponse.SC_CREATED);//201
-            response.add("status", 200);
-            response.add("message", "Order Successful");
-            response.add("data", "");
-        } else {
-            System.out.println("false");
-            resp.setStatus(HttpServletResponse.SC_OK);//201
-            response.add("status", 400);
-            response.add("message", "Order Not Successful");
-            response.add("data", "");
-        }
+
+            if (ordersBO.addOrder(ordersDTO)) {
+                System.out.println("true");
+                resp.setStatus(HttpServletResponse.SC_CREATED);//201
+                response.add("status", 200);
+                response.add("message", "Order Successful");
+                response.add("data", "");
+            } else {
+                System.out.println("false");
+                resp.setStatus(HttpServletResponse.SC_OK);//201
+                response.add("status", 400);
+                response.add("message", "Order Not Successful");
+                response.add("data", "");
+            }
+
         writer.print(response.build());
     }
 
-    public boolean saveOrder(JsonObject order, JsonArray orderDetail) {
+/*    public boolean saveOrder(JsonObject order, JsonArray orderDetail) {
 
         try {
             connection = ds.getConnection();
@@ -187,11 +215,11 @@ public class OrderServlet extends HttpServlet {
             pstm.setObject(4, orderDetailJsonObj.getString("itemPrice"));
             pstm.setObject(5, orderDetailJsonObj.getString("itemTotal"));
 
-            /*String itemCode = orderDetailJsonObj.getString("itemCode");
+            *//*String itemCode = orderDetailJsonObj.getString("itemCode");
             String itemName = orderDetailJsonObj.getString("itemName");
             String itemPrice = orderDetailJsonObj.getString("itemPrice");
             String itemQty = orderDetailJsonObj.getString("itemQty");
-            String itemTotal = orderDetailJsonObj.getString("itemTotal");*/
+            String itemTotal = orderDetailJsonObj.getString("itemTotal");*//*
 
             if (pstm.executeUpdate() > 0) {
                 if (updateItem(orderDetailJsonObj.getString("itemCode"), orderDetailJsonObj.getString("itemQty"))) {
@@ -212,5 +240,5 @@ public class OrderServlet extends HttpServlet {
         pstm.setObject(1, itemQty);
         pstm.setObject(2, ItemCode);
         return pstm.executeUpdate() > 0;
-    }
+    }*/
 }

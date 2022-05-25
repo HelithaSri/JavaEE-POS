@@ -6,17 +6,17 @@ package dto;
  * @project JavaEE POS Backend
  */
 
-public class OrderDetailsDTO {
+public class OrderDetails {
     private String oid;
     private String itemCode;
     private int qty;
-    private int unitPrice;
+    private double unitPrice;
     private double total;
 
-    public OrderDetailsDTO() {
+    public OrderDetails() {
     }
 
-    public OrderDetailsDTO(String oid, String itemCode, int qty, int unitPrice, double total) {
+    public OrderDetails(String oid, String itemCode, int qty, double unitPrice, double total) {
         this.setOid(oid);
         this.setItemCode(itemCode);
         this.setQty(qty);
@@ -48,11 +48,11 @@ public class OrderDetailsDTO {
         this.qty = qty;
     }
 
-    public int getUnitPrice() {
+    public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(int unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 

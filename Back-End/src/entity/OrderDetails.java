@@ -10,13 +10,13 @@ public class OrderDetails {
     private String oid;
     private String itemCode;
     private int qty;
-    private int unitPrice;
+    private double unitPrice;
     private double total;
 
     public OrderDetails() {
     }
 
-    public OrderDetails(String oid, String itemCode, int qty, int unitPrice, double total) {
+    public OrderDetails(String oid, String itemCode, int qty, double unitPrice, double total) {
         this.setOid(oid);
         this.setItemCode(itemCode);
         this.setQty(qty);
@@ -49,11 +49,11 @@ public class OrderDetails {
         this.qty = qty;
     }
 
-    public int getUnitPrice() {
+    public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(int unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 

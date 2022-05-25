@@ -1,8 +1,10 @@
 package dao.custom;
 
 import dao.CrudDAO;
-import entity.Customer;
-import entity.OrderDetails;
+import dto.OrderDetails;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * @author Helitha Sri
@@ -10,5 +12,6 @@ import entity.OrderDetails;
  * @project JavaEE POS Backend
  */
 
-public interface OrderDetailsDAO extends CrudDAO<OrderDetails,String> {
+public interface OrderDetailsDAO extends CrudDAO<entity.OrderDetails,String> {
+    boolean saveOrderDetails(String id, ArrayList<OrderDetails> dtos) throws SQLException;
 }
