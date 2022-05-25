@@ -1,7 +1,6 @@
 package bo.custom;
 
 import bo.SuperBO;
-import dto.CustomerDTO;
 import dto.ItemDTO;
 
 import javax.json.JsonArrayBuilder;
@@ -16,11 +15,18 @@ import java.sql.SQLException;
 
 public interface ItemBO extends SuperBO {
     JsonArrayBuilder getAllItems() throws SQLException;
+
     JsonObjectBuilder generateItemID() throws SQLException;
+
     JsonArrayBuilder searchItem(String id) throws SQLException;
+
     boolean addItem(ItemDTO itemDTO) throws SQLException;
+
     boolean deleteItem(String id) throws SQLException;
+
     boolean updateItem(ItemDTO itemDTO) throws SQLException;
+
     JsonArrayBuilder loadAllItemIDs() throws SQLException;
+
     JsonArrayBuilder loadSelectedItemData(String id) throws SQLException;
 }

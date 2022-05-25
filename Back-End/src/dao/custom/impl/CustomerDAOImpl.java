@@ -5,11 +5,9 @@ import entity.Customer;
 import servlet.CustomerServlt;
 import servlet.OrderServlet;
 
-import javax.annotation.Resource;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,8 +23,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
     JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
-    
-    
+
     @Override
     public JsonArrayBuilder getAll() throws SQLException, ClassNotFoundException {
         Connection conn = CustomerServlt.ds.getConnection();
@@ -37,16 +34,12 @@ public class CustomerDAOImpl implements CustomerDAO {
             String cusAddress = rst.getString(3);
             int cusSalary = rst.getInt(4);
 
-//            resp.setStatus(HttpServletResponse.SC_OK);//201
-
             objectBuilder.add("id", cusID);
             objectBuilder.add("name", cusName);
             objectBuilder.add("address", cusAddress);
             objectBuilder.add("salary", cusSalary);
 
             arrayBuilder.add(objectBuilder.build());
-
-            System.out.println(cusID + " " + cusAddress + " " + cusName + " " + cusSalary);
         }
         conn.close();
         return arrayBuilder;
@@ -77,7 +70,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     public JsonArrayBuilder search(String id) throws SQLException {
         Connection conn = CustomerServlt.ds.getConnection();
         PreparedStatement pstm = conn.prepareStatement("SELECT * FROM customer WHERE CONCAT(id,name) LIKE ?");
-        pstm.setObject(1, "%"+id+"%");
+        pstm.setObject(1, "%" + id + "%");
         ResultSet resultSet = pstm.executeQuery();
 
         while (resultSet.next()) {
@@ -137,16 +130,13 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public JsonArrayBuilder loadCusId() throws SQLException {
-        System.out.println("2");
         Connection conn = OrderServlet.ds.getConnection();
         ResultSet rst = conn.prepareStatement("SELECT id FROM customer").executeQuery();
         while (rst.next()) {
             String id = rst.getString(1);
             objectBuilder.add("id", id);
             arrayBuilder.add(objectBuilder.build());
-            System.out.println("3");
         }
-//        System.out.println(arrayBuilder);
         conn.close();
         return arrayBuilder;
     }

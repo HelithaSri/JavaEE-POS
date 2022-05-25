@@ -2,7 +2,6 @@ package bo.custom;
 
 import bo.SuperBO;
 
-import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 
 /**

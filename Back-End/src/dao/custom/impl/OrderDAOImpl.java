@@ -2,7 +2,6 @@ package dao.custom.impl;
 
 import dao.custom.OrderDAO;
 import entity.Orders;
-import servlet.ItemServlet;
 import servlet.OrderServlet;
 
 import javax.json.Json;

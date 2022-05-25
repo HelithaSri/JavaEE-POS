@@ -12,7 +12,8 @@ import java.sql.SQLException;
  * @project JavaEE POS Backend
  */
 
-public interface CustomerDAO extends CrudDAO<Customer,String> {
+public interface CustomerDAO extends CrudDAO<Customer, String> {
     JsonArrayBuilder loadCusId() throws SQLException;
+
     JsonArrayBuilder loadSelectCusDetails(String id) throws SQLException;
 }

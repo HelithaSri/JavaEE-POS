@@ -8,7 +8,6 @@ import servlet.OrderServlet;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
-import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,8 +39,6 @@ public class ItemDAOImpl implements ItemDAO {
             objectBuilder.add("unitPrice", itemUnitPrice);
 
             arrayBuilder.add(objectBuilder.build());
-
-            System.out.println(itemCode + " " + itemName + " " + itemQtyOnHand + " " + itemUnitPrice);
         }
         conn.close();
         return arrayBuilder;
@@ -72,7 +69,7 @@ public class ItemDAOImpl implements ItemDAO {
     public JsonArrayBuilder search(String id) throws SQLException {
         Connection conn = ItemServlet.ds.getConnection();
         PreparedStatement pstm = conn.prepareStatement("SELECT * FROM item WHERE CONCAT(code,description) LIKE ?");
-        pstm.setObject(1, "%"+id+"%");
+        pstm.setObject(1, "%" + id + "%");
         ResultSet resultSet = pstm.executeQuery();
 
         while (resultSet.next()) {

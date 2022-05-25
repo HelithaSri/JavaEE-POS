@@ -41,11 +41,11 @@ public class OrderDetailsServlet extends HttpServlet {
         try {
             connection = ds.getConnection();
             PreparedStatement pstm = connection.prepareStatement("SELECT o.customerID, o.date, o.subTotal, od.*, i.description FROM orders o, orderdetails od, item i WHERE (o.oid =od.oid AND od.itemCode=CODE) AND CONCAT(o.oid) LIKE ?");
-            pstm.setObject(1,"%"+orderID+"%");
+            pstm.setObject(1, "%" + orderID + "%");
             ResultSet rst = pstm.executeQuery();
             resp.setStatus(HttpServletResponse.SC_OK);//201
 
-            while (rst.next()){
+            while (rst.next()) {
                 String cusiD = rst.getString(1);
                 String date = rst.getString(2);
                 String subTotal = rst.getString(3);
@@ -78,7 +78,7 @@ public class OrderDetailsServlet extends HttpServlet {
             dataMsgBuilder.add("message", "Error");
             dataMsgBuilder.add("status", 400);
             writer.print(dataMsgBuilder.build());
-        }finally {
+        } finally {
             try {
                 connection.close();
             } catch (SQLException e) {

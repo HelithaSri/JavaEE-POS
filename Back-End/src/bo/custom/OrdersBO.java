@@ -1,7 +1,6 @@
 package bo.custom;
 
 import bo.SuperBO;
-import dto.ItemDTO;
 import dto.OrdersDTO;
 
 import javax.json.JsonObjectBuilder;
@@ -15,5 +14,6 @@ import java.sql.SQLException;
 
 public interface OrdersBO extends SuperBO {
     boolean addOrder(OrdersDTO ordersDTO);
+
     JsonObjectBuilder generateID() throws SQLException;
 }

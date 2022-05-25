@@ -1,7 +1,6 @@
 package dao.custom;
 
 import dao.CrudDAO;
-import entity.Customer;
 import entity.Item;
 
 import javax.json.JsonArrayBuilder;
@@ -13,7 +12,8 @@ import java.sql.SQLException;
  * @project JavaEE POS Backend
  */
 
-public interface ItemDAO extends CrudDAO<Item,String> {
+public interface ItemDAO extends CrudDAO<Item, String> {
     JsonArrayBuilder loadItemId() throws SQLException;
+
     JsonArrayBuilder loadSelectItemDetails(String id) throws SQLException;
 }

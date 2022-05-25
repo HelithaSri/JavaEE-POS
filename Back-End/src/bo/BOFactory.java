@@ -14,19 +14,19 @@ import bo.custom.impl.OrdersBOImpl;
 public class BOFactory {
     private static BOFactory boFactory;
 
-    private BOFactory(){
+    private BOFactory() {
 
     }
 
-    public static BOFactory getBoFactory(){
-        if(boFactory == null){
-            boFactory= new BOFactory();
+    public static BOFactory getBoFactory() {
+        if (boFactory == null) {
+            boFactory = new BOFactory();
         }
         return boFactory;
     }
 
-    public SuperBO getBO(BoTypes types){
-        switch (types){
+    public SuperBO getBO(BoTypes types) {
+        switch (types) {
             case CUSTOMER:
                 return new CustomerBOImpl();
             case ITEM:
@@ -39,7 +39,8 @@ public class BOFactory {
                 return null;
         }
     }
-    public enum  BoTypes{
-        CUSTOMER,ITEM,ORDER,ORDER_DETAILS
+
+    public enum BoTypes {
+        CUSTOMER, ITEM, ORDER, ORDER_DETAILS
     }
 }

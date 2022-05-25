@@ -11,7 +11,7 @@ import dao.custom.impl.OrderDetailsDAOImpl;
  * @project JavaEE POS Backend
  */
 
-public class DAOFactory{
+public class DAOFactory {
     private static DAOFactory daoFactory;
 
     public static DAOFactory getDAOFactory() {
@@ -21,11 +21,11 @@ public class DAOFactory{
         return daoFactory;
     }
 
-    public SuperDAO getDAO(DAOTypes type){
-        switch (type){
+    public SuperDAO getDAO(DAOTypes type) {
+        switch (type) {
             case CUSTOMER:
                 return new CustomerDAOImpl();
-            case ITEM :
+            case ITEM:
                 return new ItemDAOImpl();
             case ORDER:
                 return new OrderDAOImpl();
@@ -37,6 +37,6 @@ public class DAOFactory{
     }
 
     public enum DAOTypes {
-        CUSTOMER,ITEM,ORDER,ORDER_DETAILS
+        CUSTOMER, ITEM, ORDER, ORDER_DETAILS
     }
 }
