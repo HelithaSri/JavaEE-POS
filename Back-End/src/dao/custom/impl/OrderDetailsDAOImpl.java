@@ -65,9 +65,11 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
             if (pstm.executeUpdate() > 0) {
                 if (itemDAO.updateQty(items.getItemCode(), items.getQty())) {
                 } else {
+                    connection.close();
                     return false;
                 }
             } else {
+                connection.close();
                 return false;
             }
         }

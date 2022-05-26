@@ -76,6 +76,8 @@ public class OrderDAOImpl implements OrderDAO {
         pstm.setObject(4, orders.getDiscount());
         pstm.setObject(5, orders.getTotal());
         pstm.setObject(6, orders.getSubTotal());
-        return pstm.executeUpdate() > 0;
+        boolean b = pstm.executeUpdate() > 0;
+        conn.close();
+        return b;
     }
 }

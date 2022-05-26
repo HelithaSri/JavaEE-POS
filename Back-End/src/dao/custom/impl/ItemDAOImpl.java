@@ -164,6 +164,8 @@ public class ItemDAOImpl implements ItemDAO {
         PreparedStatement pstm = connection.prepareStatement("UPDATE item SET qtyOnHand=(qtyOnHand-?) WHERE code=?");
         pstm.setObject(1, qty);
         pstm.setObject(2, id);
-        return pstm.executeUpdate() > 0;
+        boolean b = pstm.executeUpdate() > 0;
+        connection.close();
+        return b;
     }
 }
