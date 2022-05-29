@@ -10,6 +10,7 @@ $("#order-clicks").click(function (){
     setDate();  //Set Time
     loadAllCustomerIds();
     loadAllItemCodes();
+    clearPurchaseFields();
 });
 
 $("#btnAddToCart").click(function () {
@@ -263,7 +264,7 @@ function clearPurchaseFields() {
     $("#inCusAddress").val("");
 
     $("#cash").val("");
-    $("#discount").val("");
+    $("#discount").val("0");
     $("#balanceO").val("");
     $("#lblFullTotal").text("0 LKR");
     $("#lblSubTotal").text("0 LKR");
