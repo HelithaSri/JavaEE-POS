@@ -11,6 +11,7 @@ $("#order-clicks").click(function (){
     loadAllCustomerIds();
     loadAllItemCodes();
     clearPurchaseFields();
+    clearInputItems();
 });
 
 $("#btnAddToCart").click(function () {
